@@ -18,13 +18,19 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-muted">
               <img
-                src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/94eaac5f3_generated_94634cb5.png"
-                alt="Shoko Yamashita - Founder of Pulumi Hawaii"
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
+                alt="Detail-oriented cleaning care"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 to-transparent" />
+              {/* Signature overlay */}
+              <div className="absolute bottom-8 left-8 right-8">
+                <p className="font-heading text-3xl italic text-white/90 leading-tight">
+                  "Every home deserves to feel cared for."
+                </p>
+              </div>
             </div>
             {/* Floating card */}
             <div className="absolute -bottom-6 -right-6 lg:-right-12 bg-card rounded-2xl shadow-xl p-6 border border-border max-w-xs">
