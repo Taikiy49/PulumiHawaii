@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
-  content: "Aloha! 🌺 I'm Pulumi, your personal assistant. I can tell you about our cleaning services, answer questions, or even book a service for you right here! How can I help you today?",
+  content: "Aloha! 🌺 I'm Pulumi, your personal assistant. I can tell you about our cleaning services, answer questions, or even book a service for you right here!\n\nご質問やご予約はお気軽にどうぞ。日本語でも対応しております！\n\nHow can I help you today?",
 };
 
 export default function ChatWidget() {
