@@ -103,7 +103,7 @@ const translations = {
       email: "Email",
       phone: "Phone",
       address: "Address",
-      addressValue: "Honolulu, HI 96814",
+      addressValue: "988 Halekauwila St, Honolulu, HI 96814",
       requestEstimate: "Request a Free Estimate",
     },
     footer: {
@@ -221,7 +221,7 @@ const translations = {
       email: "メール",
       phone: "電話",
       address: "住所",
-      addressValue: "Honolulu, HI 96814",
+      addressValue: "988 Halekauwila St, Honolulu, HI 96814",
       requestEstimate: "無料見積もりを依頼する",
     },
     footer: {

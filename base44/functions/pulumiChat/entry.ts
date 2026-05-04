@@ -53,7 +53,7 @@ ${ADDONS.map(a => `- ${a}`).join('\n')}
 COMPANY INFO:
 - Phone: (808) 227-7729
 - Email: pulumihawaii@gmail.com
-- Address: 988 Halekauwila St, #1110, Honolulu, HI 96814
+- Address: 988 Halekauwila St, Honolulu, HI 96814
 - Free estimates available
 
 BOOKING: To book, you need to collect:
