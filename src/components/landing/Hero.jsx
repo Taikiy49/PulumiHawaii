@@ -79,7 +79,13 @@ export default function Hero() {
                 </Button>
               </motion.div>
             </Link>
-
+            <a href="mailto:pulumihawaii@gmail.com">
+              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <Button variant="outline" className="font-body text-base rounded-full px-8 h-14">
+                  Contact Now
+                </Button>
+              </motion.div>
+            </a>
           </motion.div>
 
           {/* Trust badges */}

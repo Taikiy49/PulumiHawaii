@@ -120,15 +120,22 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mt-16"
+          className="text-center mt-16 flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <Link to="/booking">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} className="inline-block">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-body rounded-full px-8 h-12 text-base shadow-lg shadow-primary/20">
                 {t('hero.cta')}
               </Button>
             </motion.div>
           </Link>
+          <a href="mailto:pulumihawaii@gmail.com">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+              <Button variant="outline" className="font-body rounded-full px-8 h-12 text-base">
+                Contact Now
+              </Button>
+            </motion.div>
+          </a>
         </motion.div>
       </div>
     </section>
