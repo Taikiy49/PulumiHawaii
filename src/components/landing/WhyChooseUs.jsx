@@ -121,7 +121,7 @@ export default function WhyChooseUs() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3"
+          className="flex flex-col sm:flex-row items-center justify-center gap-5"
         >
           <Link to="/booking">
             <Button className="bg-white text-primary hover:bg-white/90 font-body rounded-full px-8 h-12 text-base group">
@@ -129,11 +129,6 @@ export default function WhyChooseUs() {
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <a href="mailto:pulumihawaii@gmail.com">
-            <Button variant="outline" className="border-white text-white hover:bg-white/10 font-body rounded-full px-8 h-12 text-base">
-              Contact Now
-            </Button>
-          </a>
           <div className="flex items-center gap-2 text-primary-foreground/70 font-body text-sm">
             <div className="flex">
               {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 fill-current text-yellow-300" />)}
