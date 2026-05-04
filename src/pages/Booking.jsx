@@ -12,6 +12,7 @@ import Footer from '@/components/landing/Footer';
 import ServiceStep from '@/components/booking/ServiceStep';
 import DateTimeStep from '@/components/booking/DateTimeStep';
 import DetailsStep from '@/components/booking/DetailsStep';
+import ChatWidget from '@/components/chat/ChatWidget';
 
 const serviceLabels = {
   regular_cleaning: 'Regular Cleaning',
@@ -241,6 +242,7 @@ export default function Booking() {
         </div>
       </div>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }

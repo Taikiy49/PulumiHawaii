@@ -7,6 +7,7 @@ import BeforeAfter from '@/components/landing/BeforeAfter';
 import Testimonials from '@/components/landing/Testimonials';
 import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
+import ChatWidget from '@/components/chat/ChatWidget';
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <Testimonials />
       <Contact />
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
