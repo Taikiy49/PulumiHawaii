@@ -2,13 +2,14 @@ import React from 'react';
 import { useLanguage } from '@/lib/i18n';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Contact() {
   const { t } = useLanguage();
 
   const contactItems = [
+    { icon: Phone, label: t('contact.phone'), value: '(808) 227-7729', href: 'tel:8082277729' },
     { icon: Mail, label: t('contact.email'), value: 'pulumihawaii@gmail.com', href: 'mailto:pulumihawaii@gmail.com' },
     { icon: MapPin, label: t('contact.address'), value: t('contact.addressValue'), href: '#' },
   ];
@@ -65,8 +66,11 @@ export default function Contact() {
               <h3 className="font-heading text-3xl font-light mb-4">
                 {t('contact.requestEstimate')}
               </h3>
-              <p className="font-body text-base text-primary-foreground/80 mb-8 leading-relaxed">
+              <p className="font-body text-base text-primary-foreground/80 mb-2 leading-relaxed">
                 {t('footer.pricing')}
+              </p>
+              <p className="font-body text-sm text-primary-foreground/60 mb-8">
+                Direct booking is the fastest way to secure your date.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/booking">
@@ -75,7 +79,6 @@ export default function Contact() {
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-
               </div>
             </div>
           </motion.div>
