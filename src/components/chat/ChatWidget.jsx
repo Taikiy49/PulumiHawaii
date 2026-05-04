@@ -66,7 +66,7 @@ export default function ChatWidget() {
     } catch (err) {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "Sorry, I'm having trouble right now. Please call us at (808) 227-7729 or email pulumihawaii@gmail.com 🌺",
+        content: "Sorry, I'm having trouble right now. Please email us at pulumihawaii@gmail.com 🌺",
       }]);
     } finally {
       setIsLoading(false);

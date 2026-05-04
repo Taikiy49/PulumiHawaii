@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Phone, ArrowRight, Sparkles, MapPin, Clock } from 'lucide-react';
+import { ArrowRight, Sparkles, MapPin, Clock } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Hero() {
@@ -79,14 +79,7 @@ export default function Hero() {
                 </Button>
               </motion.div>
             </Link>
-            <a href="tel:8082277729">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Button variant="outline" className="font-body text-base rounded-full px-8 h-14 border-border hover:bg-secondary">
-                  <Phone className="w-4 h-4 mr-2" />
-                  {t('hero.callCta')}
-                </Button>
-              </motion.div>
-            </a>
+
           </motion.div>
 
           {/* Trust badges */}

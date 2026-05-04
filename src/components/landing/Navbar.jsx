@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/lib/i18n';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -87,10 +87,7 @@ export default function Navbar() {
               <span className={`transition-opacity font-jp ${lang === 'ja' ? 'opacity-100 font-semibold' : 'opacity-50'}`}>JP</span>
             </button>
 
-            <a href="tel:8082277729" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <Phone className="w-4 h-4" />
-              <span className="font-body">(808) 227-7729</span>
-            </a>
+
 
             <Link to="/booking">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-body text-sm tracking-wide rounded-full px-6 h-11">
@@ -139,10 +136,6 @@ export default function Navbar() {
                   {t('nav.booking')}
                 </Button>
               </Link>
-              <a href="tel:8082277729" className="flex items-center gap-2 text-muted-foreground py-2 font-body">
-                <Phone className="w-4 h-4" />
-                (808) 227-7729
-              </a>
             </div>
           </motion.div>
         )}

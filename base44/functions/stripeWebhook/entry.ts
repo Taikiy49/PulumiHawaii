@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       ${amount ? `<p style="margin: 4px 0 0; color: #666; font-size: 14px;">お支払い金額: ${amount}</p>` : ''}
     </div>
     <p style="line-height: 1.7; color: #444;">当日お伺いするのを楽しみにしております。ご質問がございましたら、お気軽にご連絡ください。</p>
-    <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
+    <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">📧 pulumihawaii@gmail.com</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
     <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, Honolulu, HI 96814</p>
@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
       ${booking.address ? `<p style="margin: 4px 0 0; color: #666; font-size: 14px;">Address: ${booking.address}</p>` : ''}
     </div>
     <p style="line-height: 1.7; color: #444;">We look forward to taking care of your home. See you soon!</p>
-    <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">Questions? We're always happy to help!<br>📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
+    <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">Questions? We're always happy to help!<br>📧 pulumihawaii@gmail.com</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
     <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, Honolulu, HI 96814</p>

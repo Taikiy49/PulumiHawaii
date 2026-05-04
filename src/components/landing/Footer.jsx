@@ -44,11 +44,6 @@ export default function Footer() {
                   pulumihawaii@gmail.com
                 </a>
               </li>
-              <li>
-                <a href="tel:8082277729" className="hover:text-background transition-colors">
-                  (808) 227-7729
-                </a>
-              </li>
               <li>{t('contact.addressValue')}</li>
             </ul>
           </div>

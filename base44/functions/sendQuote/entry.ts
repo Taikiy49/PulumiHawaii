@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
     <div style="text-align: center; margin: 32px 0;">
       <a href="${session.url}" style="background: #1e3a5f; color: white; padding: 16px 40px; text-decoration: none; border-radius: 50px; font-size: 16px; display: inline-block; letter-spacing: 1px;">今すぐお支払い</a>
     </div>
-    <p style="color: #888; font-size: 13px; line-height: 1.6;">ご不明な点がございましたら、お気軽にお問い合わせください。<br>📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
+    <p style="color: #888; font-size: 13px; line-height: 1.6;">ご不明な点がございましたら、お気軽にお問い合わせください。<br>📧 pulumihawaii@gmail.com</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
     <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, Honolulu, HI 96814</p>
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
     <div style="text-align: center; margin: 32px 0;">
       <a href="${session.url}" style="background: #1e3a5f; color: white; padding: 16px 40px; text-decoration: none; border-radius: 50px; font-size: 16px; display: inline-block; letter-spacing: 1px;">Confirm & Pay Now</a>
     </div>
-    <p style="color: #888; font-size: 13px; line-height: 1.6;">Questions? We're always happy to help!<br>📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
+    <p style="color: #888; font-size: 13px; line-height: 1.6;">Questions? We're always happy to help!<br>📧 pulumihawaii@gmail.com</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
     <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, Honolulu, HI 96814</p>

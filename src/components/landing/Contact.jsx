@@ -2,7 +2,7 @@ import React from 'react';
 import { useLanguage } from '@/lib/i18n';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Contact() {
@@ -10,7 +10,6 @@ export default function Contact() {
 
   const contactItems = [
     { icon: Mail, label: t('contact.email'), value: 'pulumihawaii@gmail.com', href: 'mailto:pulumihawaii@gmail.com' },
-    { icon: Phone, label: t('contact.phone'), value: '(808) 227-7729', href: 'tel:8082277729' },
     { icon: MapPin, label: t('contact.address'), value: t('contact.addressValue'), href: '#' },
   ];
 
@@ -76,12 +75,7 @@ export default function Contact() {
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <a href="tel:8082277729">
-                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 font-body rounded-full px-8 h-12 text-base">
-                    <Phone className="w-4 h-4 mr-2" />
-                    {t('hero.callCta')}
-                  </Button>
-                </a>
+
               </div>
             </div>
           </motion.div>
