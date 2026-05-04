@@ -43,16 +43,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid messages format' }, { status: 400 });
     }
 
-    // Fetch available dates for Shoko
-    const availabilities = await base44.asServiceRole.entities.Availability.list();
-    const availableDates = availabilities
-      .filter(a => a.is_available && new Date(a.date) >= new Date())
-      .map(a => ({ date: a.date, times: a.time_slots || [] }))
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    const availableDatesStr = availableDates.length > 0
-      ? availableDates.slice(0, 10).map(a => `${a.date} (${a.times.join(', ')})`).join(', ')
-      : 'Please contact us directly to arrange a custom date.';
 
     const SYSTEM_PROMPT = `You are Pulumi, a friendly and warm AI assistant for Pulumi Hawaii — a premium cleaning and property care service on Oʻahu, Hawaiʻi.
 
@@ -75,10 +66,7 @@ COMPANY INFO:
 - Address: 988 Halekauwila St, Honolulu, HI 96814
 - Free estimates available
 
-SHOKO'S AVAILABLE DATES:
-${availableDatesStr}
-
-When discussing dates, always reference the available dates above. If the customer picks a date not in the list, suggest one of the available options instead.
+When the user wants to book, you'll ask them to select a date and time from an interactive picker — they'll see available options there.
 
 BOOKING: To book, you need to collect:
 1. Service type (one of: regular_cleaning, deep_cleaning, inspection, care_services)
