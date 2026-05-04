@@ -24,9 +24,10 @@ export default function Services() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-16"
         >
           <p className="font-body text-xs tracking-[0.3em] text-primary uppercase mb-3">
@@ -49,11 +50,12 @@ export default function Services() {
             return (
               <motion.div
                 key={key}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/20 hover:shadow-lg transition-all duration-500 cursor-pointer"
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -6, boxShadow: "0 20px 40px -12px rgba(0,0,0,0.12)" }}
+                className="group relative bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/20 transition-colors duration-300 cursor-pointer"
                 onClick={() => setActiveService(isActive ? null : i)}
               >
                 {/* Image */}
@@ -61,7 +63,7 @@ export default function Services() {
                   <img
                     src={serviceImages[i]}
                     alt={t(`services.${key}.title`)}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute top-4 left-4">
                     <div className="w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm flex items-center justify-center">
@@ -117,12 +119,15 @@ export default function Services() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mt-16"
         >
           <Link to="/booking">
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-body rounded-full px-8 h-12 text-base">
-              {t('hero.cta')}
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }} className="inline-block">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-body rounded-full px-8 h-12 text-base shadow-lg shadow-primary/20">
+                {t('hero.cta')}
+              </Button>
+            </motion.div>
           </Link>
         </motion.div>
       </div>

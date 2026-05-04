@@ -104,7 +104,8 @@ export default function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors"
+              className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-all duration-300 cursor-default"
+              whileHover={{ y: -5, scale: 1.02 }}
             >
               <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center mb-4">
                 <pillar.icon className="w-6 h-6 text-primary-foreground" />

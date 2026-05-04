@@ -20,9 +20,10 @@ export default function Contact() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left side */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className="font-body text-xs tracking-[0.3em] text-primary uppercase mb-3">
               {t('contact.title')}
@@ -52,9 +53,10 @@ export default function Contact() {
 
           {/* Right side - CTA */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="relative bg-primary rounded-3xl p-10 lg:p-14 text-primary-foreground overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-32 translate-x-32" />

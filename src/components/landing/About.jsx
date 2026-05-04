@@ -12,10 +12,10 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Identity card replacing photo */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center justify-center"
           >
             <div className="w-full max-w-sm bg-card rounded-3xl border border-border shadow-xl p-10 text-center space-y-6">
@@ -37,10 +37,10 @@ export default function About() {
 
           {/* Content */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className="font-body text-xs tracking-[0.3em] text-primary uppercase mb-3">{t('about.subtitle')}</p>
             <h2 className="font-heading text-4xl lg:text-5xl font-light text-foreground mb-8 leading-tight">
