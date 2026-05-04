@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
-import { CheckCircle2, Clock, XCircle, Play, Mail, Phone, DollarSign, Send, ExternalLink, CreditCard } from 'lucide-react';
+import { CheckCircle2, Clock, XCircle, Play, Mail, Phone, ChevronRight, CreditCard, DollarSign } from 'lucide-react';
+import BookingDrawer from './BookingDrawer';
 
 const statusConfig = {
   pending: { label: 'Pending', color: 'bg-amber-100 text-amber-800', icon: Clock },
   confirmed: { label: 'Confirmed', color: 'bg-blue-100 text-blue-800', icon: CheckCircle2 },
-  in_progress: { label: 'In Progress', color: 'bg-primary/10 text-primary', icon: Play },
-  completed: { label: 'Completed', color: 'bg-green-100 text-green-800', icon: CheckCircle2 },
-  cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-800', icon: XCircle },
+  in_progress: { label: 'In Progress', color: 'bg-purple-100 text-purple-700', icon: Play },
+  completed: { label: 'Completed', color: 'bg-green-100 text-green-700', icon: CheckCircle2 },
+  cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-700', icon: XCircle },
 };
 
 const paymentConfig = {
-  unpaid: { label: 'Unpaid', color: 'bg-gray-100 text-gray-600' },
+  unpaid: { label: 'Not Quoted', color: 'bg-gray-100 text-gray-500' },
   quote_sent: { label: 'Quote Sent', color: 'bg-purple-100 text-purple-700' },
   paid: { label: 'Paid ✓', color: 'bg-green-100 text-green-700' },
 };
@@ -29,71 +27,8 @@ const serviceLabels = {
   care_services: 'Care Services',
 };
 
-function QuotePanel({ booking, onSent }) {
-  const [amount, setAmount] = useState(booking.quote_amount || '');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSend = async () => {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      setError('Please enter a valid amount.');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      await base44.functions.invoke('sendQuote', {
-        booking_id: booking.id,
-        quote_amount: Number(amount),
-      });
-      onSent();
-    } catch (e) {
-      setError(e?.response?.data?.error || 'Failed to send quote. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="mt-4 pt-4 border-t border-border">
-      <p className="font-body text-xs font-semibold text-foreground mb-2 flex items-center gap-1">
-        <DollarSign className="w-3 h-3 text-primary" />
-        Send Price Quote to Customer
-      </p>
-      <div className="flex items-center gap-2">
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-body text-sm">$</span>
-          <Input
-            type="number"
-            min="1"
-            step="0.01"
-            placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="pl-7 w-32 h-9 rounded-lg font-body text-sm"
-          />
-        </div>
-        <Button
-          onClick={handleSend}
-          disabled={loading}
-          className="h-9 rounded-full font-body text-xs bg-primary hover:bg-primary/90 gap-1.5"
-        >
-          {loading ? (
-            <div className="w-3 h-3 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-          ) : (
-            <Send className="w-3 h-3" />
-          )}
-          {loading ? 'Sending…' : 'Send Quote & Email'}
-        </Button>
-      </div>
-      {error && <p className="font-body text-xs text-destructive mt-1">{error}</p>}
-    </div>
-  );
-}
-
 export default function BookingsList() {
-  const queryClient = useQueryClient();
-  const [openQuoteId, setOpenQuoteId] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const { data: bookings, isLoading } = useQuery({
     queryKey: ['admin-bookings'],
@@ -101,151 +36,118 @@ export default function BookingsList() {
     initialData: [],
   });
 
-  const updateBooking = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Booking.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-bookings'] }),
-  });
-
   if (isLoading) {
-    return <div className="flex justify-center py-12"><div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" /></div>;
-  }
-
-  if (bookings.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="font-body text-muted-foreground">No bookings yet</p>
+      <div className="flex justify-center py-12">
+        <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
 
+  if (bookings.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+          <Clock className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <p className="font-body text-muted-foreground text-lg">No bookings yet</p>
+        <p className="font-body text-muted-foreground text-sm mt-1">New bookings will appear here</p>
+      </div>
+    );
+  }
+
+  // Sort: pending first, then by date
+  const sorted = [...bookings].sort((a, b) => {
+    const order = { pending: 0, confirmed: 1, in_progress: 2, completed: 3, cancelled: 4 };
+    return (order[a.status] ?? 5) - (order[b.status] ?? 5);
+  });
+
   return (
-    <div className="space-y-4">
-      {bookings.map(booking => {
-        const status = statusConfig[booking.status] || statusConfig.pending;
-        const StatusIcon = status.icon;
-        const payment = paymentConfig[booking.payment_status] || paymentConfig.unpaid;
-        const isQuoteOpen = openQuoteId === booking.id;
+    <>
+      <div className="space-y-3">
+        {sorted.map(booking => {
+          const status = statusConfig[booking.status] || statusConfig.pending;
+          const StatusIcon = status.icon;
+          const payment = paymentConfig[booking.payment_status || 'unpaid'];
+          const needsAttention = booking.payment_status === 'unpaid' || !booking.payment_status;
 
-        return (
-          <div key={booking.id} className="bg-card rounded-2xl border border-border p-6 hover:shadow-md transition-shadow">
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <h3 className="font-body text-base font-semibold text-foreground">{booking.client_name}</h3>
-                  <Badge className={`${status.color} border-none font-body text-xs`}>
-                    <StatusIcon className="w-3 h-3 mr-1" />
-                    {status.label}
-                  </Badge>
-                  <Badge variant="outline" className="font-body text-xs">{serviceLabels[booking.service_type]}</Badge>
-                  <Badge className={`${payment.color} border-none font-body text-xs`}>
-                    <CreditCard className="w-3 h-3 mr-1" />
-                    {payment.label}
-                  </Badge>
-                  {booking.quote_amount && (
-                    <span className="font-body text-sm font-semibold text-primary">${Number(booking.quote_amount).toFixed(2)}</span>
-                  )}
-                </div>
-
-                <div className="flex flex-wrap gap-4 text-sm font-body text-muted-foreground">
-                  {booking.preferred_date && (
-                    <span>{format(new Date(booking.preferred_date), 'MMM d, yyyy')}</span>
-                  )}
-                  {booking.preferred_time && <span>• {booking.preferred_time}</span>}
-                  {booking.address && <span>• {booking.address}</span>}
-                  {booking.bedrooms && <span>• {booking.bedrooms} bed</span>}
-                  {booking.bathrooms && <span>• {booking.bathrooms} bath</span>}
-                </div>
-
-                <div className="flex flex-wrap gap-3 text-xs font-body text-muted-foreground">
-                  {booking.client_email && (
-                    <a href={`mailto:${booking.client_email}`} className="flex items-center gap-1 hover:text-primary">
-                      <Mail className="w-3 h-3" /> {booking.client_email}
-                    </a>
-                  )}
-                  {booking.client_phone && (
-                    <a href={`tel:${booking.client_phone}`} className="flex items-center gap-1 hover:text-primary">
-                      <Phone className="w-3 h-3" /> {booking.client_phone}
-                    </a>
-                  )}
-                </div>
-
-                {booking.addons && booking.addons.length > 0 && (
-                  <div className="flex gap-1 flex-wrap">
-                    {booking.addons.map((addon, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs font-body">{addon}</Badge>
-                    ))}
+          return (
+            <button
+              key={booking.id}
+              onClick={() => setSelectedBooking(booking)}
+              className={`w-full text-left bg-card rounded-2xl border transition-all hover:shadow-md hover:border-primary/30 active:scale-[0.99] p-5 ${
+                needsAttention ? 'border-amber-200' : 'border-border'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0 space-y-2">
+                  {/* Top row */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {needsAttention && (
+                      <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
+                    )}
+                    <h3 className="font-body text-base font-semibold text-foreground truncate">
+                      {booking.client_name}
+                    </h3>
+                    <Badge className={`${status.color} border-none font-body text-xs flex-shrink-0`}>
+                      <StatusIcon className="w-3 h-3 mr-1" />
+                      {status.label}
+                    </Badge>
                   </div>
-                )}
 
-                {booking.notes && (
-                  <p className="text-xs font-body text-muted-foreground italic mt-2">"{booking.notes}"</p>
-                )}
-
-                {/* Quote section */}
-                {booking.payment_status === 'quote_sent' && booking.stripe_payment_link && (
-                  <div className="mt-3 flex items-center gap-3">
-                    <a
-                      href={booking.stripe_payment_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs font-body text-primary hover:underline"
-                    >
-                      <ExternalLink className="w-3 h-3" /> View Payment Link
-                    </a>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setOpenQuoteId(isQuoteOpen ? null : booking.id)}
-                      className="h-7 text-xs font-body text-muted-foreground"
-                    >
-                      Resend / Update Quote
-                    </Button>
+                  {/* Service + date */}
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-body text-muted-foreground">
+                    <span className="font-medium text-foreground">{serviceLabels[booking.service_type]}</span>
+                    {booking.preferred_date && (
+                      <span>{format(new Date(booking.preferred_date), 'MMM d, yyyy')}</span>
+                    )}
+                    {booking.preferred_time && <span>{booking.preferred_time}</span>}
                   </div>
-                )}
 
-                {/* Send quote button for new/pending bookings */}
-                {(!booking.payment_status || booking.payment_status === 'unpaid') && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setOpenQuoteId(isQuoteOpen ? null : booking.id)}
-                    className="mt-2 h-8 text-xs font-body rounded-full gap-1.5"
-                  >
-                    <DollarSign className="w-3 h-3" />
-                    Set Price & Send Quote
-                  </Button>
-                )}
+                  {/* Contact + payment row */}
+                  <div className="flex items-center gap-3 flex-wrap">
+                    {booking.client_email && (
+                      <span className="flex items-center gap-1 text-xs font-body text-muted-foreground truncate">
+                        <Mail className="w-3 h-3 flex-shrink-0" />
+                        {booking.client_email}
+                      </span>
+                    )}
+                    <Badge className={`${payment.color} border-none font-body text-xs flex-shrink-0`}>
+                      <CreditCard className="w-3 h-3 mr-1" />
+                      {payment.label}
+                    </Badge>
+                    {booking.quote_amount && (
+                      <span className="flex items-center gap-0.5 text-xs font-body font-semibold text-primary">
+                        <DollarSign className="w-3 h-3" />{Number(booking.quote_amount).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-                {isQuoteOpen && (
-                  <QuotePanel
-                    booking={booking}
-                    onSent={() => {
-                      setOpenQuoteId(null);
-                      queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
-                    }}
-                  />
-                )}
+                {/* Arrow */}
+                <div className="flex-shrink-0 self-center">
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                </div>
               </div>
 
-              <Select
-                value={booking.status}
-                onValueChange={(status) => updateBooking.mutate({ id: booking.id, data: { status } })}
-              >
-                <SelectTrigger className="w-40 h-9 rounded-lg font-body text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="confirmed">Confirmed</SelectItem>
-                  <SelectItem value="in_progress">In Progress</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+              {needsAttention && (
+                <div className="mt-3 pt-3 border-t border-amber-100">
+                  <p className="font-body text-xs text-amber-700 font-medium">
+                    👉 Tap to set price & send quote
+                  </p>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {selectedBooking && (
+        <BookingDrawer
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+        />
+      )}
+    </>
   );
 }
