@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, CheckCircle2, Calendar, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import ChatPromoPopup from './ChatPromoPopup';
@@ -18,7 +18,25 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [availableDates, setAvailableDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedTime, setSelectedTime] = useState('');
   const messagesEndRef = useRef(null);
+
+  // Fetch available dates on mount
+  useEffect(() => {
+    if (isOpen && availableDates.length === 0) {
+      base44.entities.Availability.list()
+        .then(data => {
+          const dates = [...new Set(data
+            .filter(a => a.is_available && new Date(a.date) >= new Date())
+            .map(a => a.date)
+          )].sort();
+          setAvailableDates(dates);
+        });
+    }
+  }, [isOpen, availableDates.length]);
 
   useEffect(() => {
     if (isOpen) {
@@ -64,6 +82,28 @@ export default function ChatWidget() {
     sendMessage(actionMessages[action]);
   };
 
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    // Fetch times for this date
+    base44.entities.Availability.list()
+      .then(data => {
+        const times = data.find(a => a.date === date)?.time_slots || [];
+        setAvailableTimes(times);
+        setSelectedTime('');
+      });
+    sendMessage(date);
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+    sendMessage(time);
+  };
+
+  // Detect if bot is asking for date/time from the last message
+  const lastMessage = messages[messages.length - 1]?.content || '';
+  const isAskingForDate = lastMessage.toLowerCase().includes('date') && selectedDate === '';
+  const isAskingForTime = lastMessage.toLowerCase().includes('time') && selectedDate !== '' && selectedTime === '';
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -107,6 +147,58 @@ export default function ChatWidget() {
                 onSelectAction={handleQuickAction}
                 isVisible={true}
               />
+            )}
+
+            {/* Date Picker */}
+            {isAskingForDate && availableDates.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="px-4 py-3"
+              >
+                <p className="text-xs font-body text-muted-foreground mb-2 flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> Select a Date
+                </p>
+                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                  {availableDates.map(date => (
+                    <motion.button
+                      key={date}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => handleDateSelect(date)}
+                      className="px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/15 border border-primary/20 hover:border-primary/40 transition-colors text-xs font-body text-foreground"
+                    >
+                      {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Time Picker */}
+            {isAskingForTime && availableTimes.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="px-4 py-3"
+              >
+                <p className="text-xs font-body text-muted-foreground mb-2 flex items-center gap-1">
+                  <Clock className="w-3 h-3" /> Select a Time
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {availableTimes.map(time => (
+                    <motion.button
+                      key={time}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => handleTimeSelect(time)}
+                      className="px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/15 border border-primary/20 hover:border-primary/40 transition-colors text-xs font-body text-foreground"
+                    >
+                      {time}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
             )}
 
             {/* Messages */}
