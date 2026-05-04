@@ -1,16 +1,34 @@
 import React from 'react';
 import { useLanguage } from '@/lib/i18n';
 import { Calendar } from '@/components/ui/calendar';
-import { format, addDays, isBefore, startOfDay } from 'date-fns';
-
-const timeSlots = [
-  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
-];
+import { format, isBefore, startOfDay, parseISO } from 'date-fns';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 
 export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime, onTimeSelect }) {
   const { t } = useLanguage();
   const today = startOfDay(new Date());
+
+  const { data: availability } = useQuery({
+    queryKey: ['availability'],
+    queryFn: () => base44.entities.Availability.filter({ is_available: true }),
+    initialData: [],
+  });
+
+  // Build a set of available date strings (yyyy-MM-dd)
+  const availableDates = new Set(availability.map(a => a.date));
+
+  // Get time slots for the selected date
+  const selectedDateStr = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
+  const availableSlots = selectedDateStr
+    ? (availability.find(a => a.date === selectedDateStr)?.time_slots || [])
+    : [];
+
+  const isDateDisabled = (date) => {
+    if (isBefore(date, today)) return true;
+    const dateStr = format(date, 'yyyy-MM-dd');
+    return !availableDates.has(dateStr);
+  };
 
   return (
     <div className="space-y-8">
@@ -22,14 +40,22 @@ export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime,
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={onDateSelect}
-            disabled={(date) => isBefore(date, today)}
+            onSelect={(date) => {
+              onDateSelect(date);
+              onTimeSelect(''); // reset time when date changes
+            }}
+            disabled={isDateDisabled}
             className="rounded-2xl border border-border p-4"
           />
         </div>
+        {availability.length === 0 && (
+          <p className="text-center font-body text-sm text-muted-foreground mt-4">
+            No availability set yet. Please check back soon or call us at (808) 227-7729.
+          </p>
+        )}
       </div>
 
-      {selectedDate && (
+      {selectedDate && availableSlots.length > 0 && (
         <div>
           <h3 className="font-heading text-2xl font-light text-foreground mb-4">
             {t('booking.selectTime')}
@@ -38,7 +64,7 @@ export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime,
             {format(selectedDate, 'EEEE, MMMM d, yyyy')}
           </p>
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-            {timeSlots.map(time => (
+            {availableSlots.map(time => (
               <button
                 key={time}
                 onClick={() => onTimeSelect(time)}
