@@ -10,33 +10,28 @@ export default function About() {
     <section id="about" className="py-24 lg:py-32 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Image */}
+          {/* Identity card replacing photo */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="flex items-center justify-center"
           >
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-muted">
-              <img
-                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80"
-                alt="Detail-oriented cleaning care"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 to-transparent" />
-              {/* Signature overlay */}
-              <div className="absolute bottom-8 left-8 right-8">
-                <p className="font-heading text-3xl italic text-white/90 leading-tight">
+            <div className="w-full max-w-sm bg-card rounded-3xl border border-border shadow-xl p-10 text-center space-y-6">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                <span className="font-heading text-3xl text-primary">S</span>
+              </div>
+              <div>
+                <p className="font-heading text-2xl font-semibold text-foreground">Shoko Yamashita</p>
+                <p className="font-body text-sm text-muted-foreground mt-1">{t('about.role')}</p>
+                <p className="font-body text-xs text-primary mt-2 tracking-wider uppercase">Pulumi Hawaii, LLC</p>
+              </div>
+              <div className="border-t border-border pt-6">
+                <p className="font-heading text-xl italic text-muted-foreground leading-snug">
                   "Every home deserves to feel cared for."
                 </p>
               </div>
-            </div>
-            {/* Floating card */}
-            <div className="absolute -bottom-6 -right-6 lg:-right-12 bg-card rounded-2xl shadow-xl p-6 border border-border max-w-xs">
-              <p className="font-heading text-xl font-semibold text-foreground">Shoko Yamashita</p>
-              <p className="font-body text-sm text-muted-foreground mt-1">{t('about.role')}</p>
-              <p className="font-body text-xs text-primary mt-2 tracking-wider uppercase">Pulumi Hawaii, LLC</p>
             </div>
           </motion.div>
 
