@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { format, isBefore, startOfDay } from 'date-fns';
-import { Plus, Trash2, Check } from 'lucide-react';
+import { format } from 'date-fns';
+import { Plus, Trash2 } from 'lucide-react';
 
 const allTimeSlots = [
   '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
@@ -56,11 +56,6 @@ export default function AvailabilityManager() {
     });
   };
 
-  const today = startOfDay(new Date());
-
-  // Dates with existing availability
-  const availableDates = availability.map(a => a.date);
-
   return (
     <div className="grid lg:grid-cols-2 gap-8">
       {/* Left: Add availability */}
@@ -82,7 +77,7 @@ export default function AvailabilityManager() {
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
-            disabled={(date) => isBefore(date, today)}
+
             className="rounded-2xl border border-border"
           />
         </div>
