@@ -1,0 +1,43 @@
+{
+  "name": "Testimonial",
+  "type": "object",
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Client name or anonymous label"
+    },
+    "neighborhood": {
+      "type": "string",
+      "description": "Client's neighborhood for local authority"
+    },
+    "content_en": {
+      "type": "string",
+      "description": "Testimonial text in English"
+    },
+    "content_ja": {
+      "type": "string",
+      "description": "Testimonial text in Japanese"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Star rating 1-5"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "regular_cleaning",
+        "deep_cleaning",
+        "inspection",
+        "care_services"
+      ]
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "client_name",
+    "content_en"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "PropertyLog",
+  "type": "object",
+  "properties": {
+    "property_address": {
+      "type": "string",
+      "description": "Property address"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "Owner's email for portal access"
+    },
+    "service_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "regular_cleaning",
+        "deep_cleaning",
+        "inspection",
+        "care_services"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "description": "Service notes and observations"
+    },
+    "photo_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photos taken during service"
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "team_member": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "property_address",
+    "service_date"
+  ]
+}

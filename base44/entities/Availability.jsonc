@@ -1,0 +1,31 @@
+{
+  "name": "Availability",
+  "type": "object",
+  "properties": {
+    "team_member": {
+      "type": "string",
+      "description": "Name of the team member"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Available date"
+    },
+    "time_slots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available time slots for this date"
+    },
+    "is_available": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the team member is available"
+    }
+  },
+  "required": [
+    "team_member",
+    "date"
+  ]
+}
