@@ -82,9 +82,27 @@
       "type": "string",
       "description": "Team member assigned"
     },
-    "total_estimate": {
+    "quote_amount": {
       "type": "number",
-      "description": "Estimated price"
+      "description": "Price quote set by admin in USD"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "unpaid",
+        "quote_sent",
+        "paid"
+      ],
+      "default": "unpaid",
+      "description": "Payment status"
+    },
+    "stripe_payment_link": {
+      "type": "string",
+      "description": "Stripe payment link URL"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
     },
     "language": {
       "type": "string",
