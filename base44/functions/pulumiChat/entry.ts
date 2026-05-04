@@ -34,7 +34,27 @@ const ADDONS = [
   "Laundry Service",
 ];
 
-const SYSTEM_PROMPT = `You are Pulumi, a friendly and warm AI assistant for Pulumi Hawaii — a premium cleaning and property care service on Oʻahu, Hawaiʻi.
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const { messages } = await req.json();
+
+    if (!messages || !Array.isArray(messages)) {
+      return Response.json({ error: 'Invalid messages format' }, { status: 400 });
+    }
+
+    // Fetch available dates for Shoko
+    const availabilities = await base44.asServiceRole.entities.Availability.list();
+    const availableDates = availabilities
+      .filter(a => a.is_available && new Date(a.date) >= new Date())
+      .map(a => ({ date: a.date, times: a.time_slots || [] }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const availableDatesStr = availableDates.length > 0
+      ? availableDates.slice(0, 10).map(a => `${a.date} (${a.times.join(', ')})`).join(', ')
+      : 'Please contact us directly to arrange a custom date.';
+
+    const SYSTEM_PROMPT = `You are Pulumi, a friendly and warm AI assistant for Pulumi Hawaii — a premium cleaning and property care service on Oʻahu, Hawaiʻi.
 
 LANGUAGE: Detect the customer's language from their messages and always respond in the same language. If they write in Japanese, respond fully in Japanese. If they write in English, respond in English. Default to English if unclear.
 
@@ -56,11 +76,16 @@ COMPANY INFO:
 - Address: 988 Halekauwila St, Honolulu, HI 96814
 - Free estimates available
 
+SHOKO'S AVAILABLE DATES:
+${availableDatesStr}
+
+When discussing dates, always reference the available dates above. If the customer picks a date not in the list, suggest one of the available options instead.
+
 BOOKING: To book, you need to collect:
 1. Service type (one of: regular_cleaning, deep_cleaning, inspection, care_services)
 2. Any add-ons (optional)
-3. Preferred date (YYYY-MM-DD format)
-4. Preferred time (e.g. "9:00 AM")
+3. Preferred date (YYYY-MM-DD format — must be from the available dates list)
+4. Preferred time (must be from the times available for that date)
 5. Full name
 6. Email address
 7. Phone (optional)
@@ -74,15 +99,6 @@ When you have collected items 1, 3, 4, 5, and 6 (minimum required), confirm all 
 <BOOKING_DATA>{"service_type":"...","addons":[],"preferred_date":"...","preferred_time":"...","client_name":"...","client_email":"...","client_phone":"...","address":"...","property_type":"...","bedrooms":0,"bathrooms":0,"notes":"...","status":"pending"}</BOOKING_DATA>
 
 Be warm, helpful, and concise. Use a friendly Hawaiian spirit. Keep responses short and conversational. Don't ask for all info at once — collect it naturally through conversation.`;
-
-Deno.serve(async (req) => {
-  try {
-    const base44 = createClientFromRequest(req);
-    const { messages } = await req.json();
-
-    if (!messages || !Array.isArray(messages)) {
-      return Response.json({ error: 'Invalid messages format' }, { status: 400 });
-    }
 
     const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
       prompt: `${SYSTEM_PROMPT}\n\nConversation:\n${messages.map(m => `${m.role === 'user' ? 'Customer' : 'Pulumi AI'}: ${m.content}`).join('\n')}\n\nPulumi AI:`,
