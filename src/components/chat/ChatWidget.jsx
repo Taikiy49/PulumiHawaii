@@ -4,6 +4,7 @@ import { MessageCircle, X, Send, Loader2, Sparkles, CheckCircle2 } from 'lucide-
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import ChatPromoPopup from './ChatPromoPopup';
+import ChatQuickActions from './ChatQuickActions';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
@@ -16,6 +17,7 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -24,11 +26,12 @@ export default function ChatWidget() {
     }
   }, [messages, isOpen]);
 
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
+  const sendMessage = async (text = null) => {
+    const messageText = (text || input).trim();
+    if (!messageText || isLoading) return;
 
-    const userMessage = { role: 'user', content: text };
+    setShowQuickActions(false);
+    const userMessage = { role: 'user', content: messageText };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput('');
@@ -50,6 +53,15 @@ export default function ChatWidget() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuickAction = (action) => {
+    const actionMessages = {
+      book: "I'd like to book a service",
+      pricing: "Can you tell me about your pricing?",
+      contact: "How can I contact Pulumi Hawaii?",
+    };
+    sendMessage(actionMessages[action]);
   };
 
   const handleKeyDown = (e) => {
@@ -87,6 +99,15 @@ export default function ChatWidget() {
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {/* Quick Actions */}
+            {messages.length === 1 && showQuickActions && (
+              <ChatQuickActions
+                onSelectService={(service) => sendMessage(`I'm interested in ${service}`)}
+                onSelectAction={handleQuickAction}
+                isVisible={true}
+              />
+            )}
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background">
@@ -160,8 +181,8 @@ export default function ChatWidget() {
                   }}
                 />
                 <button
-                  onClick={sendMessage}
-                  disabled={!input.trim() || isLoading}
+                   onClick={() => sendMessage()}
+                   disabled={!input.trim() || isLoading}
                   className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                 >
                   {isLoading ? (
