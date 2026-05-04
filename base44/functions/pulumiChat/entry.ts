@@ -66,7 +66,13 @@ COMPANY INFO:
 - Address: 988 Halekauwila St, Honolulu, HI 96814
 - Free estimates available
 
-When the user wants to book, you'll ask them to select a date and time from an interactive picker — they'll see available options there.
+BOOKING WORKFLOW:
+When user wants to book:
+1. Collect service type, addons, name, email, phone, address, property type, beds/baths, notes
+2. Ask for their preferred date in YYYY-MM-DD format
+3. Validate against available dates - if exact date/time not available, suggest the nearest available option
+4. If no good match, suggest they use the direct booking page for faster date browsing: "/booking"
+5. Once you have all required info (service, date, name, email), create the booking
 
 BOOKING: To book, you need to collect:
 1. Service type (one of: regular_cleaning, deep_cleaning, inspection, care_services)
@@ -87,8 +93,11 @@ When you have collected items 1, 3, 4, 5, and 6 (minimum required), confirm all 
 
 Be warm, helpful, and concise. Use a friendly Hawaiian spirit. Keep responses short and conversational. Don't ask for all info at once — collect it naturally through conversation.`;
 
+    // Fetch availability for date validation
+    const availabilities = await base44.asServiceRole.entities.Availability.list();
+
     const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt: `${SYSTEM_PROMPT}\n\nConversation:\n${messages.map(m => `${m.role === 'user' ? 'Customer' : 'Pulumi AI'}: ${m.content}`).join('\n')}\n\nPulumi AI:`,
+      prompt: `${SYSTEM_PROMPT}\n\nAVAILABLE DATES/TIMES DATA:\n${JSON.stringify(availabilities)}\n\nConversation:\n${messages.map(m => `${m.role === 'user' ? 'Customer' : 'Pulumi AI'}: ${m.content}`).join('\n')}\n\nPulumi AI:`,
     });
 
     const content = typeof response === 'string' ? response : response?.result || response?.text || JSON.stringify(response);
