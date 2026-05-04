@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
-    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, #1110, Honolulu, HI 96814</p>
+    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — Honolulu, HI 96814</p>
   </div>
 </div>` : `
 <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #1c1c1c;">
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     <p style="color: #888; font-size: 13px; line-height: 1.6; margin-top: 24px;">Questions? We're always happy to help!<br>📧 pulumihawaii@gmail.com<br>📞 (808) 227-7729</p>
   </div>
   <div style="background: #1c1c1c; padding: 20px; text-align: center;">
-    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — 988 Halekauwila St, #1110, Honolulu, HI 96814</p>
+    <p style="color: rgba(255,255,255,0.4); font-size: 11px; margin: 0;">© Pulumi Hawaii, LLC — Honolulu, HI 96814</p>
   </div>
 </div>`;
 
