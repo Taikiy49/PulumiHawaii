@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
+import ChatPromoPopup from './ChatPromoPopup';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
@@ -60,6 +61,7 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      {!isOpen && <ChatPromoPopup onOpen={() => setIsOpen(true)} />}
       <AnimatePresence>
         {isOpen && (
           <motion.div
