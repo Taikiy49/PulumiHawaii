@@ -58,7 +58,7 @@ export default function BeforeAfter() {
           >
             {/* After (background) */}
             <img
-              src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/edfb84a01_generated_f0ce72d8.png"
+              src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/0cbf1ef02_generated_image.png"
               alt="After cleaning"
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -69,7 +69,7 @@ export default function BeforeAfter() {
               style={{ width: `${sliderPos}%` }}
             >
               <img
-                src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/da7cc88dd_generated_268b108f.png"
+                src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/e667a79e8_generated_image.png"
                 alt="Before cleaning"
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ width: `${containerRef.current?.offsetWidth || 1000}px`, maxWidth: 'none' }}
