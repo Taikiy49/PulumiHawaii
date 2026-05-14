@@ -9,6 +9,7 @@ import WhyChooseUs from '@/components/landing/WhyChooseUs';
 import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
 import ChatWidget from '@/components/chat/ChatWidget';
+import FAQ from '@/components/landing/FAQ';
 import TrustBar from '@/components/landing/TrustBar';
 import RecurringPlans from '@/components/landing/RecurringPlans';
 
@@ -24,6 +25,7 @@ export default function Home() {
       <BeforeAfter />
       <Testimonials />
       <WhyChooseUs />
+      <FAQ />
       <Contact />
       <Footer />
       <ChatWidget />
