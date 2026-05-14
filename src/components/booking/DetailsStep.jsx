@@ -65,7 +65,7 @@ export default function DetailsStep({ formData, onChange }) {
       </div>
 
       <div className="space-y-2">
-        <Label className="font-body text-sm">{t('booking.address')}</Label>
+        <Label className="font-body text-sm">{t('booking.address')} *</Label>
         <Input
           value={formData.address || ''}
           onChange={(e) => handleChange('address', e.target.value)}

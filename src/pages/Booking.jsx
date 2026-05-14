@@ -77,7 +77,7 @@ export default function Booking() {
     if (step === 0) return !!selectedService;
     if (step === 1) return !!frequency;
     if (step === 2) return !!selectedDate && !!selectedTime;
-    if (step === 3) return !!formData.client_name && !!formData.client_email;
+    if (step === 3) return !!formData.client_name && !!formData.client_email && !!formData.address;
     return true;
   };
 
@@ -228,7 +228,33 @@ export default function Booking() {
                     {formData.address && (
                       <div className="flex justify-between py-3">
                         <span className="text-muted-foreground">{t('booking.address')}</span>
-                        <span className="font-medium text-foreground">{formData.address}</span>
+                        <span className="font-medium text-foreground text-right max-w-[60%]">{formData.address}</span>
+                      </div>
+                    )}
+                    {formData.client_phone && (
+                      <div className="flex justify-between py-3">
+                        <span className="text-muted-foreground">{t('booking.phone')}</span>
+                        <span className="font-medium text-foreground">{formData.client_phone}</span>
+                      </div>
+                    )}
+                    {formData.property_type && (
+                      <div className="flex justify-between py-3">
+                        <span className="text-muted-foreground">{t('booking.propertyType')}</span>
+                        <span className="font-medium text-foreground capitalize">{formData.property_type.replace('_', ' ')}</span>
+                      </div>
+                    )}
+                    {(formData.bedrooms || formData.bathrooms) && (
+                      <div className="flex justify-between py-3">
+                        <span className="text-muted-foreground">{lang === 'ja' ? '間取り' : 'Size'}</span>
+                        <span className="font-medium text-foreground">
+                          {formData.bedrooms ? `${formData.bedrooms} bed` : ''}{formData.bedrooms && formData.bathrooms ? ' / ' : ''}{formData.bathrooms ? `${formData.bathrooms} bath` : ''}
+                        </span>
+                      </div>
+                    )}
+                    {formData.notes && (
+                      <div className="flex justify-between py-3">
+                        <span className="text-muted-foreground">{t('booking.notes')}</span>
+                        <span className="font-medium text-foreground text-right max-w-[60%]">{formData.notes}</span>
                       </div>
                     )}
                   </div>
