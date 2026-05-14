@@ -25,7 +25,7 @@ const translations = {
     about: {
       title: "The Pulumi Story",
       subtitle: "A Legacy of Care",
-      p1: "Founded by Shoko Yamashita, Pulumi Hawaii was born from a simple belief: every home deserves the same meticulous attention you'd give your own.",
+      p1: "Founded by Shoko, Pulumi Hawaii was born from a simple belief: every home deserves the same meticulous attention you'd give your own.",
       p2: "With roots in Japanese hospitality and a deep love for Hawaiʻi, Shoko brings a unique perspective to property care — where precision meets aloha spirit.",
       p3: "As Managing Member of Pulumi Hawaii, LLC, Shoko personally oversees every service to ensure the highest standards of quality and care.",
       role: "Managing Member",
@@ -147,7 +147,7 @@ const translations = {
     about: {
       title: "プルミの物語",
       subtitle: "思いやりの伝統",
-      p1: "プルミハワイは、山下翔子によって設立されました。すべての家は、自分の家と同じように丁寧に扱われるべきという信念から生まれました。",
+      p1: "プルミハワイは、翔子によって設立されました。すべての家は、自分の家と同じように丁寧に扱われるべきという信念から生まれました。",
       p2: "日本のおもてなしの心とハワイへの深い愛情を持つ翔子は、精密さとアロハスピリットが融合したユニークな視点でプロパティケアを提供します。",
       p3: "プルミハワイLLCのマネージングメンバーとして、翔子はすべてのサービスを個人的に監督し、最高品質のケアを保証します。",
       role: "マネージングメンバー",

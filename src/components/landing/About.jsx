@@ -23,7 +23,7 @@ export default function About() {
                 <span className="font-heading text-3xl text-primary">S</span>
               </div>
               <div>
-                <p className="font-heading text-2xl font-semibold text-foreground">Shoko Yamashita</p>
+                <p className="font-heading text-2xl font-semibold text-foreground">Shoko</p>
                 <p className="font-body text-sm text-muted-foreground mt-1">{t('about.role')}</p>
                 <p className="font-body text-xs text-primary mt-2 tracking-wider uppercase">Pulumi Hawaii, LLC</p>
               </div>
