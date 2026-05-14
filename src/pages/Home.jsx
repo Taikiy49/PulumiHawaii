@@ -10,6 +10,7 @@ import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
 import ChatWidget from '@/components/chat/ChatWidget';
 import TrustBar from '@/components/landing/TrustBar';
+import RecurringPlans from '@/components/landing/RecurringPlans';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Hero />
       <TrustBar />
       <Services />
+      <RecurringPlans />
       <About />
       <BeforeAfter />
       <Testimonials />

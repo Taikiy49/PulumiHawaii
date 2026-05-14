@@ -24,6 +24,21 @@
       ],
       "description": "Type of service requested"
     },
+    "recurring_frequency": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "default": "one_time",
+      "description": "How often the service recurs"
+    },
+    "recurring_discount": {
+      "type": "number",
+      "description": "Discount percentage applied (0, 10, 15, or 20)"
+    },
     "addons": {
       "type": "array",
       "items": {
@@ -84,7 +99,11 @@
     },
     "quote_amount": {
       "type": "number",
-      "description": "Price quote set by admin in USD"
+      "description": "Price quote set by admin in USD (after discount)"
+    },
+    "quote_amount_before_discount": {
+      "type": "number",
+      "description": "Original price before recurring discount"
     },
     "payment_status": {
       "type": "string",

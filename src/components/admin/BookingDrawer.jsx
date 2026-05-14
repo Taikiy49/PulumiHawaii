@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import {
   X, Mail, Phone, MapPin, Home, BedDouble, Bath, CalendarDays, Clock,
   DollarSign, Send, ExternalLink, CheckCircle2, StickyNote, Layers,
-  CreditCard
+  CreditCard, Repeat, Tag
 } from 'lucide-react';
 
 const serviceLabels = {
@@ -17,6 +17,13 @@ const serviceLabels = {
   deep_cleaning: 'Deep Cleaning',
   inspection: 'Inspection & Check-Ins',
   care_services: 'Care Services',
+};
+
+const frequencyLabels = {
+  one_time: 'One-Time',
+  monthly: 'Monthly (−10%)',
+  biweekly: 'Bi-Weekly (−15%)',
+  weekly: 'Weekly (−20%)',
 };
 
 const propertyLabels = {
@@ -121,6 +128,25 @@ export default function BookingDrawer({ booking, onClose }) {
               )}
             </div>
           </section>
+
+          {/* Recurring Plan */}
+          {booking.recurring_frequency && booking.recurring_frequency !== 'one_time' && (
+            <section>
+              <p className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Recurring Plan</p>
+              <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-xl">
+                <Repeat className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <div>
+                  <p className="font-body text-sm font-semibold text-green-800">{frequencyLabels[booking.recurring_frequency]}</p>
+                  {booking.recurring_discount > 0 && (
+                    <p className="font-body text-xs text-green-700 flex items-center gap-1 mt-0.5">
+                      <Tag className="w-3 h-3" />
+                      Apply {booking.recurring_discount}% discount when quoting
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Appointment */}
           <section>
@@ -255,6 +281,15 @@ export default function BookingDrawer({ booking, onClose }) {
                 <p className="font-body text-xs text-muted-foreground">
                   This will email the customer a Stripe payment link for the amount you set.
                 </p>
+                {booking.recurring_discount > 0 && quoteAmount && !isNaN(quoteAmount) && Number(quoteAmount) > 0 && (
+                  <div className="flex items-center gap-2 p-2.5 bg-green-50 border border-green-200 rounded-xl">
+                    <Tag className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+                    <p className="font-body text-xs text-green-800">
+                      <span className="font-semibold">{booking.recurring_discount}% discount</span> will be noted in email.
+                      Suggested discounted price: <span className="font-semibold">${(Number(quoteAmount) * (1 - booking.recurring_discount / 100)).toFixed(2)}</span>
+                    </p>
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-body text-lg font-semibold">$</span>
