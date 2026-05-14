@@ -4,22 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const IMAGES = [
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/a6bc86777_generated_image.png',
+    src: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80',
     label: 'Kitchen',
     label_ja: 'キッチン',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/da93fc682_generated_image.png',
+    src: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80',
     label: 'Living Room',
     label_ja: 'リビング',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/bc9ffc7a3_generated_image.png',
+    src: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=900&q=80',
     label: 'Bathroom',
     label_ja: 'バスルーム',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/bc7bc8530_generated_image.png',
+    src: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&q=80',
     label: 'Bedroom',
     label_ja: 'ベッドルーム',
   },

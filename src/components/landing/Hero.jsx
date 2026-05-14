@@ -64,6 +64,20 @@ export default function Hero() {
             {t('hero.description')}
           </motion.p>
 
+          {/* Trust line */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75, duration: 0.6 }}
+            className="font-body text-sm text-muted-foreground mb-8 flex flex-wrap gap-x-3 gap-y-1 items-center"
+          >
+            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />Locally owned &amp; operated</span>
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />Fully insured LLC</span>
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />Honolulu&apos;s trusted cleaners</span>
+          </motion.p>
+
           {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

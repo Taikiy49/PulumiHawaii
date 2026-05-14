@@ -4,10 +4,10 @@ import { ShieldCheck, Star, Home, Clock } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 
 const stats = [
-  { icon: ShieldCheck, en: 'Licensed & Insured LLC', ja: 'ライセンス取得・保険加入済み' },
-  { icon: Star,        en: '5-Star Rated Service',   ja: '5つ星評価のサービス' },
-  { icon: Home,        en: '100+ Homes Served',       ja: '100件以上の実績' },
-  { icon: Clock,       en: 'Same-Week Availability',  ja: '今週中の対応可能' },
+  { icon: ShieldCheck, en: 'Locally Owned & Operated', ja: '地元経営' },
+  { icon: Star,        en: 'Fully Insured LLC',         ja: '保険加入済みLLC' },
+  { icon: Home,        en: 'Regular cleaning from $120', ja: '定期清掃 $120〜' },
+  { icon: Clock,       en: 'Same-Week Availability',    ja: '今週中の対応可能' },
 ];
 
 export default function TrustBar() {
