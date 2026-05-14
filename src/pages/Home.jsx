@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/Hero';
 import About from '@/components/landing/About';
@@ -14,6 +15,17 @@ import TrustBar from '@/components/landing/TrustBar';
 import RecurringPlans from '@/components/landing/RecurringPlans';
 
 export default function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      setTimeout(() => {
+        const el = document.getElementById(location.state.scrollTo);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [location.state]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
