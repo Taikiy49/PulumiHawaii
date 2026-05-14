@@ -59,24 +59,22 @@ export default function RecurringStep({ frequency, onSelect }) {
                   : 'border-border hover:border-primary/30 bg-card'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                    isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {plan.discount === 0 ? <Check className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
-                  </div>
-                  <div>
-                    <p className="font-body text-base font-semibold text-foreground">{info.label}</p>
-                    <p className="font-body text-sm text-muted-foreground">{info.desc}</p>
-                  </div>
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                  isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                }`}>
+                  {plan.discount === 0 ? <Check className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
                 </div>
-                {info.badge && (
-                  <span className="font-body text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1">
-                    <Tag className="w-3 h-3" />
-                    {info.badge}
-                  </span>
-                )}
+                <div className="min-w-0">
+                  <p className="font-body text-base font-semibold text-foreground">{info.label}</p>
+                  <p className="font-body text-sm text-muted-foreground">{info.desc}</p>
+                  {info.badge && (
+                    <span className="inline-flex items-center gap-1 mt-2 font-body text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                      <Tag className="w-3 h-3 flex-shrink-0" />
+                      {info.badge}
+                    </span>
+                  )}
+                </div>
               </div>
             </motion.button>
           );
