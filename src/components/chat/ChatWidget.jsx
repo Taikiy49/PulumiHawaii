@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader2, Sparkles, CheckCircle2, Calendar, Clock } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
 import ChatPromoPopup from './ChatPromoPopup';
@@ -8,7 +8,7 @@ import ChatQuickActions from './ChatQuickActions';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
-  content: "Aloha! 🌺 I'm Pulumi, your personal assistant. I can tell you about our cleaning services, answer questions, or even book a service for you right here!\n\nご質問やご予約はお気軽にどうぞ。日本語でも対応しております！\n\nHow can I help you today?",
+  content: "Aloha! 🌺 I'm Pulumi, your guide to Pulumi Hawaii. Ask me anything about our services, or I can point you to the right place!\n\nご質問はお気軽にどうぞ。日本語でも対応しております！",
 };
 
 export default function ChatWidget() {
@@ -16,7 +16,6 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(true);
 
   const messagesEndRef = useRef(null);
@@ -45,9 +44,8 @@ export default function ChatWidget() {
         messages: updatedMessages.filter(m => m.role !== 'system'),
       });
 
-      const { message, bookingCreated } = response.data;
+      const { message } = response.data;
       setMessages(prev => [...prev, { role: 'assistant', content: message }]);
-      if (bookingCreated) setBookingConfirmed(true);
     } catch (err) {
       setMessages(prev => [...prev, {
         role: 'assistant',
@@ -60,8 +58,8 @@ export default function ChatWidget() {
 
   const handleQuickAction = (action) => {
     const actionMessages = {
-      book: "I'd like to book a service",
-      pricing: "Can you tell me about your pricing?",
+      book: "Where can I book a service?",
+      pricing: "Can you tell me about your services and pricing?",
       contact: "How can I contact Pulumi Hawaii?",
     };
     sendMessage(actionMessages[action]);
@@ -158,13 +156,6 @@ export default function ChatWidget() {
                     <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                     <div className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
-                </div>
-              )}
-
-              {bookingConfirmed && (
-                <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                  <p className="font-body text-xs text-green-700">Booking request submitted! We'll confirm shortly.</p>
                 </div>
               )}
 
