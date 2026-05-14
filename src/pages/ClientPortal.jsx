@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Camera, CheckCircle2, Calendar, ClipboardCheck, Search } from 'lucide-react';
+import ServiceChecklist from '@/components/portal/ServiceChecklist';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -80,6 +81,11 @@ export default function ClientPortal() {
             <div className="w-8 h-8 border-4 border-muted border-t-primary rounded-full animate-spin" />
           </div>
         )}
+
+        {/* Service Standards Checklist */}
+        <div className="mb-12">
+          <ServiceChecklist />
+        </div>
 
         <div className="space-y-6">
           {logs.map((log, i) => (
