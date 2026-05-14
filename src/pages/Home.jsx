@@ -9,12 +9,14 @@ import WhyChooseUs from '@/components/landing/WhyChooseUs';
 import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
 import ChatWidget from '@/components/chat/ChatWidget';
+import TrustBar from '@/components/landing/TrustBar';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <Hero />
+      <TrustBar />
       <Services />
       <About />
       <BeforeAfter />

@@ -74,9 +74,14 @@ export default function Services() {
 
                 {/* Content */}
                 <div className="p-6">
-                  <h3 className="font-heading text-xl font-semibold text-foreground mb-2">
-                    {t(`services.${key}.title`)}
-                  </h3>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-heading text-xl font-semibold text-foreground">
+                      {t(`services.${key}.title`)}
+                    </h3>
+                    <span className="font-body text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">
+                      {t(`services.${key}.from`)}
+                    </span>
+                  </div>
                   <p className="font-body text-sm text-muted-foreground leading-relaxed mb-4">
                     {t(`services.${key}.desc`)}
                   </p>
