@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader2, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReactMarkdown from 'react-markdown';
-import ChatPromoPopup from './ChatPromoPopup';
-import ChatQuickActions from './ChatQuickActions';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
@@ -16,11 +14,8 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showQuickActions, setShowQuickActions] = useState(true);
 
   const messagesEndRef = useRef(null);
-
-
 
   useEffect(() => {
     if (isOpen) {
@@ -32,7 +27,6 @@ export default function ChatWidget() {
     const messageText = (text || input).trim();
     if (!messageText || isLoading) return;
 
-    setShowQuickActions(false);
     const userMessage = { role: 'user', content: messageText };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
@@ -56,17 +50,6 @@ export default function ChatWidget() {
     }
   };
 
-  const handleQuickAction = (action) => {
-    const actionMessages = {
-      book: "Where can I book a service?",
-      pricing: "Can you tell me about your services and pricing?",
-      contact: "How can I contact Pulumi Hawaii?",
-    };
-    sendMessage(actionMessages[action]);
-  };
-
-
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -76,7 +59,6 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -103,17 +85,6 @@ export default function ChatWidget() {
               </button>
             </div>
 
-            {/* Quick Actions */}
-            {messages.length === 1 && showQuickActions && (
-              <ChatQuickActions
-                onSelectService={(service) => sendMessage(`I'm interested in ${service}`)}
-                onSelectAction={handleQuickAction}
-                isVisible={true}
-              />
-            )}
-
-
-
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background">
               {messages.map((msg, i) => (
@@ -135,6 +106,7 @@ export default function ChatWidget() {
                           p: ({ children }) => <p className="my-0.5">{children}</p>,
                           ul: ({ children }) => <ul className="my-1 ml-3 list-disc">{children}</ul>,
                           li: ({ children }) => <li className="my-0">{children}</li>,
+                          a: ({ children, href }) => <a href={href} className="text-primary underline" target="_blank" rel="noopener noreferrer">{children}</a>,
                         }}
                       >
                         {msg.content}
@@ -179,8 +151,8 @@ export default function ChatWidget() {
                   }}
                 />
                 <button
-                   onClick={() => sendMessage()}
-                   disabled={!input.trim() || isLoading}
+                  onClick={() => sendMessage()}
+                  disabled={!input.trim() || isLoading}
                   className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                 >
                   {isLoading ? (
