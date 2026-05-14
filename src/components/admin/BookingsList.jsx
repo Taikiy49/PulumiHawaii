@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { CheckCircle2, Clock, XCircle, Play, Mail, Phone, ChevronRight, CreditCard, DollarSign } from 'lucide-react';
+import { CheckCircle2, Clock, XCircle, Play, Mail, ChevronRight, CreditCard, DollarSign, Repeat } from 'lucide-react';
 import BookingDrawer from './BookingDrawer';
 
 const statusConfig = {
@@ -98,6 +98,12 @@ export default function BookingsList() {
                   {/* Service + date */}
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-body text-muted-foreground">
                     <span className="font-medium text-foreground">{serviceLabels[booking.service_type]}</span>
+                    {booking.recurring_frequency && booking.recurring_frequency !== 'one_time' && (
+                      <span className="flex items-center gap-1 text-xs text-green-700 font-medium bg-green-50 px-2 py-0.5 rounded-full">
+                        <Repeat className="w-3 h-3" />
+                        {booking.recurring_frequency === 'monthly' ? 'Monthly' : booking.recurring_frequency === 'biweekly' ? 'Bi-Weekly' : 'Weekly'}
+                      </span>
+                    )}
                     {booking.preferred_date && (
                       <span>{format(new Date(booking.preferred_date), 'MMM d, yyyy')}</span>
                     )}
@@ -144,7 +150,7 @@ export default function BookingsList() {
 
       {selectedBooking && (
         <BookingDrawer
-          booking={selectedBooking}
+          booking={bookings.find(b => b.id === selectedBooking.id) || selectedBooking}
           onClose={() => setSelectedBooking(null)}
         />
       )}

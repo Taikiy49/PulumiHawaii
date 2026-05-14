@@ -163,9 +163,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { booking_id, quote_amount } = await req.json();
+    const { booking_id, quote_amount: rawAmount } = await req.json();
+    const quote_amount = Number(rawAmount);
 
-    if (!booking_id || !quote_amount || quote_amount <= 0) {
+    if (!booking_id || !quote_amount || quote_amount <= 0 || isNaN(quote_amount)) {
       return Response.json({ error: 'booking_id and a valid quote_amount are required' }, { status: 400 });
     }
 

@@ -281,12 +281,17 @@ export default function BookingDrawer({ booking, onClose }) {
                 <p className="font-body text-xs text-muted-foreground">
                   This will email the customer a Stripe payment link for the amount you set.
                 </p>
-                {booking.recurring_discount > 0 && quoteAmount && !isNaN(quoteAmount) && Number(quoteAmount) > 0 && (
-                  <div className="flex items-center gap-2 p-2.5 bg-green-50 border border-green-200 rounded-xl">
-                    <Tag className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
-                    <p className="font-body text-xs text-green-800">
-                      <span className="font-semibold">{booking.recurring_discount}% discount</span> will be noted in email.
-                      Suggested discounted price: <span className="font-semibold">${(Number(quoteAmount) * (1 - booking.recurring_discount / 100)).toFixed(2)}</span>
+                {booking.recurring_discount > 0 && (
+                  <div className="flex items-start gap-2 p-2.5 bg-green-50 border border-green-200 rounded-xl">
+                    <Tag className="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <p className="font-body text-xs text-green-800 leading-relaxed">
+                      <span className="font-semibold">This client gets {booking.recurring_discount}% off</span> ({frequencyLabels[booking.recurring_frequency]}).<br/>
+                      Enter the <span className="font-semibold">final discounted price</span> — the email will show their savings automatically.
+                      {quoteAmount && !isNaN(quoteAmount) && Number(quoteAmount) > 0 && (
+                        <span className="block mt-1 text-green-700">
+                          Original would be: <span className="font-semibold">${(Number(quoteAmount) / (1 - booking.recurring_discount / 100)).toFixed(2)}</span> → they pay <span className="font-semibold">${Number(quoteAmount).toFixed(2)}</span>
+                        </span>
+                      )}
                     </p>
                   </div>
                 )}
