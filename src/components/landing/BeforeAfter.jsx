@@ -1,28 +1,43 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function BeforeAfter() {
-  const { t } = useLanguage();
-  const [sliderPos, setSliderPos] = useState(50);
-  const containerRef = useRef(null);
-  const isDragging = useRef(false);
+const IMAGES = [
+  {
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/a6bc86777_generated_image.png',
+    label: 'Kitchen',
+    label_ja: 'キッチン',
+  },
+  {
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/da93fc682_generated_image.png',
+    label: 'Living Room',
+    label_ja: 'リビング',
+  },
+  {
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/bc9ffc7a3_generated_image.png',
+    label: 'Bathroom',
+    label_ja: 'バスルーム',
+  },
+  {
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/bc7bc8530_generated_image.png',
+    label: 'Bedroom',
+    label_ja: 'ベッドルーム',
+  },
+];
 
-  const handleMove = (clientX) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPos(percentage);
-  };
+export default function CleaningGallery() {
+  const { t, language } = useLanguage();
+  const [active, setActive] = useState(0);
 
-  const handleMouseDown = () => { isDragging.current = true; };
-  const handleMouseUp = () => { isDragging.current = false; };
-  const handleMouseMove = (e) => { if (isDragging.current) handleMove(e.clientX); };
-  const handleTouchMove = (e) => { handleMove(e.touches[0].clientX); };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive(prev => (prev + 1) % IMAGES.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <section className="py-24 lg:py-32 bg-background">
+    <section className="py-24 lg:py-32 bg-muted/30">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,66 +53,78 @@ export default function BeforeAfter() {
           </h2>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl mx-auto"
-        >
-          <div
-            ref={containerRef}
-            className="relative aspect-[16/9] rounded-2xl overflow-hidden cursor-col-resize select-none shadow-2xl"
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onTouchMove={handleTouchMove}
-            onTouchStart={handleMouseDown}
-            onTouchEnd={handleMouseUp}
-          >
-            {/* After (background) */}
-            <img
-              src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/0cbf1ef02_generated_image.png"
-              alt="After cleaning"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-
-            {/* Before (foreground, clipped) */}
-            <div
-              className="absolute inset-0 overflow-hidden"
-              style={{ width: `${sliderPos}%` }}
-            >
-              <img
-                src="https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/e667a79e8_generated_image.png"
-                alt="Before cleaning"
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
+          {/* Large featured image */}
+          <div className="lg:col-span-3 relative rounded-2xl overflow-hidden aspect-[4/3] shadow-2xl">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={active}
+                src={IMAGES[active].src}
+                alt={IMAGES[active].label}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ width: `${containerRef.current?.offsetWidth || 1000}px`, maxWidth: 'none' }}
               />
-            </div>
-
-            {/* Slider line */}
-            <div
-              className="absolute top-0 bottom-0 w-1 bg-white/90 shadow-lg"
-              style={{ left: `${sliderPos}%`, transform: 'translateX(-50%)' }}
-            >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center">
-                <div className="flex gap-0.5">
-                  <div className="w-0 h-0 border-t-[6px] border-b-[6px] border-r-[6px] border-t-transparent border-b-transparent border-r-primary/60" />
-                  <div className="w-0 h-0 border-t-[6px] border-b-[6px] border-l-[6px] border-t-transparent border-b-transparent border-l-primary/60" />
-                </div>
-              </div>
-            </div>
-
-            {/* Labels */}
-            <div className="absolute top-6 left-6 px-4 py-1.5 rounded-full bg-foreground/70 text-white text-sm font-body backdrop-blur-sm">
-              {t('transformation.before')}
-            </div>
-            <div className="absolute top-6 right-6 px-4 py-1.5 rounded-full bg-primary/90 text-white text-sm font-body backdrop-blur-sm">
-              {t('transformation.after')}
+            </AnimatePresence>
+            {/* Label overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-6 py-5">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={active}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4 }}
+                  className="font-body text-white text-lg font-medium"
+                >
+                  {language === 'ja' ? IMAGES[active].label_ja : IMAGES[active].label}
+                </motion.p>
+              </AnimatePresence>
             </div>
           </div>
-        </motion.div>
+
+          {/* Thumbnail grid */}
+          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+            {IMAGES.map((img, i) => (
+              <motion.button
+                key={i}
+                onClick={() => setActive(i)}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className={`relative rounded-xl overflow-hidden aspect-square shadow-lg transition-all duration-300 ${
+                  active === i ? 'ring-2 ring-primary ring-offset-2' : 'opacity-75 hover:opacity-100'
+                }`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.label}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/10 hover:bg-black/0 transition-colors" />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-3 py-2">
+                  <p className="font-body text-white text-xs font-medium">
+                    {language === 'ja' ? img.label_ja : img.label}
+                  </p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-2 mt-8">
+          {IMAGES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`transition-all duration-300 rounded-full ${
+                active === i ? 'w-6 h-2 bg-primary' : 'w-2 h-2 bg-border hover:bg-primary/40'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
