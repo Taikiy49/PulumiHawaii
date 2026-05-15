@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, startOfWeek, endOfWeek, addWeeks, addMonths } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import BookingDrawer from './BookingDrawer';
 
 const SERVICE_COLORS = {
   regular_cleaning: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -22,6 +23,7 @@ const SERVICE_LABELS = {
 export default function BookingCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const { data: bookings } = useQuery({
     queryKey: ['bookings-calendar'],
@@ -69,6 +71,7 @@ export default function BookingCalendar() {
   const selectedDayBookings = selectedDay ? getBookingsForDay(selectedDay) : [];
 
   return (
+    <>
     <div className="grid lg:grid-cols-3 gap-6">
       {/* Calendar */}
       <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-5">
@@ -133,20 +136,31 @@ export default function BookingCalendar() {
                   {format(day, 'd')}
                 </span>
                 <div className="space-y-0.5">
-                  {dayBookings.slice(0, 2).map((b, i) => (
-                    <div
-                      key={i}
-                      className={`text-[9px] font-body font-medium px-1 py-0.5 rounded border truncate ${SERVICE_COLORS[b.service_type] || 'bg-muted text-foreground border-border'}`}
-                    >
-                      {b.preferred_time ? b.preferred_time.replace(' AM','a').replace(' PM','p') : ''} {b.client_name?.split(' ')[0]}
-                    </div>
-                  ))}
-                  {dayBookings.length > 2 && (
-                    <div className="text-[9px] font-body text-muted-foreground pl-1">
-                      +{dayBookings.length - 2} more
-                    </div>
-                  )}
-                </div>
+                   {dayBookings.slice(0, 2).map((b, i) => (
+                     <button
+                       key={i}
+                       onClick={(e) => {
+                         e.stopPropagation();
+                         setSelectedBooking(b);
+                       }}
+                       className={`text-[9px] font-body font-medium px-1 py-0.5 rounded border truncate w-full text-left hover:opacity-80 transition-opacity ${SERVICE_COLORS[b.service_type] || 'bg-muted text-foreground border-border'}`}
+                       title={`${b.client_name} — ${b.preferred_time || 'TBD'}`}
+                     >
+                       {b.preferred_time ? b.preferred_time.replace(' AM','a').replace(' PM','p') : '—'} {b.client_name?.split(' ')[0]}
+                     </button>
+                   ))}
+                   {dayBookings.length > 2 && (
+                     <button 
+                       onClick={(e) => {
+                         e.stopPropagation();
+                         setSelectedDay(selectedDay && isSameDay(new Date(selectedDay), new Date(selectedDay)) ? null : new Date(selectedDay));
+                       }}
+                       className="text-[9px] font-body text-muted-foreground pl-1 hover:text-foreground transition-colors"
+                     >
+                       +{dayBookings.length - 2} more
+                     </button>
+                   )}
+                 </div>
               </button>
             );
           })}
@@ -189,20 +203,27 @@ export default function BookingCalendar() {
                     </div>
                     <p className="font-body text-sm text-foreground">{b.client_name}</p>
                     <p className="font-body text-xs text-muted-foreground">{b.client_email}</p>
-                    {b.address && (
-                      <p className="font-body text-xs text-muted-foreground">{b.address}</p>
-                    )}
-                    {b._is_recurring && (
-                      <p className="font-body text-[10px] text-primary/70 italic">↻ Recurring ({b.recurring_frequency?.replace('_', ' ')})</p>
-                    )}
-                    <div className={`inline-block mt-1 text-[10px] font-body px-2 py-0.5 rounded-full font-medium ${
-                      b.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                      b.status === 'pending' ? 'bg-amber-100 text-amber-800' :
-                      b.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                      'bg-muted text-muted-foreground'
-                    }`}>
-                      {b.status}
-                    </div>
+                     {b.address && (
+                       <p className="font-body text-xs text-muted-foreground">{b.address}</p>
+                     )}
+                     <div className="flex flex-wrap gap-2 items-center mt-2">
+                       {b.quote_amount && (
+                         <span className="font-body text-xs font-semibold text-primary">
+                           💰 ${Number(b.quote_amount).toFixed(2)}
+                         </span>
+                       )}
+                       {b._is_recurring && (
+                         <span className="font-body text-[10px] text-primary/70 italic">↻ {b.recurring_frequency?.replace('_', ' ')}</span>
+                       )}
+                       <div className={`text-[10px] font-body px-2 py-0.5 rounded-full font-medium ${
+                         b.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                         b.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                         b.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                         'bg-muted text-muted-foreground'
+                       }`}>
+                         {b.status}
+                       </div>
+                     </div>
                   </div>
                 ))}
               </div>
@@ -218,5 +239,12 @@ export default function BookingCalendar() {
         )}
       </div>
     </div>
+    {selectedBooking && (
+      <BookingDrawer
+        booking={selectedBooking}
+        onClose={() => setSelectedBooking(null)}
+      />
+    )}
+    </>
   );
 }

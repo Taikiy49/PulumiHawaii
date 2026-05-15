@@ -1,7 +1,7 @@
 import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { CalendarDays, CheckCircle2, Clock, Users } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Clock, Users, DollarSign } from 'lucide-react';
 
 export default function StatsOverview() {
   const { data: bookings } = useQuery({
@@ -9,6 +9,10 @@ export default function StatsOverview() {
     queryFn: () => base44.entities.Booking.list(),
     initialData: [],
   });
+
+  const totalRevenue = bookings
+    .filter(b => b.payment_status === 'paid' && b.quote_amount)
+    .reduce((sum, b) => sum + Number(b.quote_amount || 0), 0);
 
   const stats = [
     {
@@ -30,9 +34,9 @@ export default function StatsOverview() {
       color: 'bg-blue-50 text-blue-600',
     },
     {
-      label: 'Completed',
-      value: bookings.filter(b => b.status === 'completed').length,
-      icon: Users,
+      label: 'Revenue',
+      value: `$${totalRevenue.toFixed(0)}`,
+      icon: DollarSign,
       color: 'bg-green-50 text-green-600',
     },
   ];
