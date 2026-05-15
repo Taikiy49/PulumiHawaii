@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '@/lib/i18n';
 import { Calendar } from '@/components/ui/calendar';
-import { format, isBefore, startOfDay, parseISO } from 'date-fns';
+import { format, isBefore, startOfDay } from 'date-fns';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,14 +15,30 @@ export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime,
     initialData: [],
   });
 
+  // Fetch existing bookings to filter out already-booked slots
+  const { data: bookings } = useQuery({
+    queryKey: ['bookings-booked-slots'],
+    queryFn: () => base44.entities.Booking.list(),
+    initialData: [],
+  });
+
   // Build a set of available date strings (yyyy-MM-dd)
   const availableDates = new Set(availability.map(a => a.date));
 
-  // Get time slots for the selected date
+  // Get time slots for the selected date, minus already-booked ones
   const selectedDateStr = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
-  const availableSlots = selectedDateStr
+  const rawSlots = selectedDateStr
     ? (availability.find(a => a.date === selectedDateStr)?.time_slots || [])
     : [];
+
+  // Find booked times on selected date (any non-cancelled booking)
+  const bookedTimes = new Set(
+    bookings
+      .filter(b => b.preferred_date === selectedDateStr && b.status !== 'cancelled')
+      .map(b => b.preferred_time)
+  );
+
+  const availableSlots = rawSlots.filter(slot => !bookedTimes.has(slot));
 
   const isDateDisabled = (date) => {
     if (isBefore(date, today)) return true;

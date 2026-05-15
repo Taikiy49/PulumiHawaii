@@ -5,6 +5,7 @@ import { ArrowLeft, CalendarDays, ClipboardList, Clock, Lock } from 'lucide-reac
 import StatsOverview from '@/components/admin/StatsOverview';
 import BookingsList from '@/components/admin/BookingsList';
 import AvailabilityManager from '@/components/admin/AvailabilityManager';
+import BookingCalendar from '@/components/admin/BookingCalendar';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
@@ -91,6 +92,10 @@ export default function Admin() {
               <ClipboardList className="w-4 h-4" />
               Bookings
             </TabsTrigger>
+            <TabsTrigger value="calendar" className="rounded-lg font-body text-sm gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <CalendarDays className="w-4 h-4" />
+              Calendar
+            </TabsTrigger>
             <TabsTrigger value="availability" className="rounded-lg font-body text-sm gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Clock className="w-4 h-4" />
               Availability
@@ -99,6 +104,10 @@ export default function Admin() {
 
           <TabsContent value="bookings" className="mt-6">
             <BookingsList />
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-6">
+            <BookingCalendar />
           </TabsContent>
 
           <TabsContent value="availability" className="mt-6">

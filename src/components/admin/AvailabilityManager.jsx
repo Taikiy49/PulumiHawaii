@@ -7,11 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, CheckSquare, Square } from 'lucide-react';
 
 const allTimeSlots = [
-  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
+  '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM',
+  '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+  '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM',
+  '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
+  '4:00 PM', '4:30 PM',
 ];
 
 export default function AvailabilityManager() {
@@ -84,31 +87,49 @@ export default function AvailabilityManager() {
 
         {selectedDate && (
           <div>
-            <Label className="font-body text-sm mb-3 block">
-              Available Times for {format(selectedDate, 'MMM d, yyyy')}
-            </Label>
-            <div className="grid grid-cols-3 gap-2">
-              {allTimeSlots.map(slot => (
-                <button
-                  key={slot}
-                  onClick={() => toggleSlot(slot)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-body transition-all ${
-                    selectedSlots.includes(slot)
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : 'border-border bg-card text-foreground hover:border-primary/30'
-                  }`}
-                >
-                  {slot}
-                </button>
-              ))}
+            <div className="flex items-center justify-between mb-3">
+              <Label className="font-body text-sm">
+                Available Times for {format(selectedDate, 'MMM d, yyyy')}
+              </Label>
+              <button
+                onClick={() => setSelectedSlots(selectedSlots.length === allTimeSlots.length ? [] : [...allTimeSlots])}
+                className="flex items-center gap-1 text-xs text-primary font-body hover:underline"
+              >
+                {selectedSlots.length === allTimeSlots.length ? (
+                  <><Square className="w-3 h-3" /> Clear all</>
+                ) : (
+                  <><CheckSquare className="w-3 h-3" /> Select all</>
+                )}
+              </button>
             </div>
+            {/* AM / PM groups */}
+            {[['AM', allTimeSlots.filter(s => s.includes('AM'))], ['PM', allTimeSlots.filter(s => s.includes('PM'))]].map(([period, slots]) => (
+              <div key={period} className="mb-4">
+                <p className="font-body text-xs text-muted-foreground uppercase tracking-wider mb-2">{period}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {slots.map(slot => (
+                    <button
+                      key={slot}
+                      onClick={() => toggleSlot(slot)}
+                      className={`py-2 px-3 rounded-lg border text-xs font-body transition-all ${
+                        selectedSlots.includes(slot)
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border bg-card text-foreground hover:border-primary/30'
+                      }`}
+                    >
+                      {slot}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
             <Button
               onClick={handleSave}
               disabled={selectedSlots.length === 0 || createAvailability.isPending}
-              className="mt-4 rounded-full font-body bg-primary hover:bg-primary/90"
+              className="mt-2 rounded-full font-body bg-primary hover:bg-primary/90 w-full"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Save Availability
+              Save {selectedSlots.length > 0 ? `(${selectedSlots.length} slots)` : ''} Availability
             </Button>
           </div>
         )}
