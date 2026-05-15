@@ -218,6 +218,7 @@ Deno.serve(async (req) => {
       const bookingId = session.metadata?.booking_id;
 
       if (bookingId) {
+        // Mark booking as paid & confirmed
         await base44.asServiceRole.entities.Booking.update(bookingId, {
           payment_status: 'paid',
           status: 'confirmed',
@@ -232,8 +233,10 @@ Deno.serve(async (req) => {
             : (frequencyLabels[booking.recurring_frequency] || frequencyLabels.one_time);
           const amount = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : '';
           const discount = booking.recurring_discount || 0;
+          const isRecurring = booking.recurring_frequency && booking.recurring_frequency !== 'one_time';
 
-          const emailBody = confirmationEmail({
+          // 1. Email the CLIENT — booking confirmed
+          const clientEmailBody = confirmationEmail({
             lang: booking.language || 'en',
             clientName: booking.client_name,
             serviceLabel,
@@ -257,7 +260,93 @@ Deno.serve(async (req) => {
             subject: isJa
               ? '【Pulumi Hawaii】お支払い確認・ご予約確定のお知らせ 🌺'
               : `Booking Confirmed — See You Soon, ${booking.client_name}! 🌺`,
-            body: emailBody,
+            body: clientEmailBody,
+          });
+
+          // 2. Email the ADMIN — payment received alert
+          const adminEmailBody = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0; padding:0; background:#f4f1ee; font-family:Georgia,serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f1ee; padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px; width:100%; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+        <tr>
+          <td style="background:linear-gradient(135deg,#1e5f3a,#2d8252); padding:36px 32px; text-align:center;">
+            <p style="margin:0 0 4px; color:rgba(255,255,255,0.6); font-size:11px; letter-spacing:3px; text-transform:uppercase;">PULUMI HAWAII</p>
+            <h1 style="margin:0; color:#fff; font-size:22px; font-weight:normal; letter-spacing:2px;">💳 Payment Received!</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 32px 0;">
+            <p style="margin:0; font-size:18px; color:#1e5f3a; font-weight:bold;">${booking.client_name} just paid ${amount}</p>
+            <p style="margin:8px 0 0; font-size:14px; color:#555;">
+              <strong>${serviceLabel}</strong>${isRecurring ? ` — ${freqLabel}` : ''}
+              ${booking.preferred_date ? ` on <strong>${booking.preferred_date}</strong>${booking.preferred_time ? ` at <strong>${booking.preferred_time}</strong>` : ''}` : ''}
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 32px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f6f3; border-radius:12px; overflow:hidden;">
+              <tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px; width:130px;">Client</td>
+                <td style="padding:12px 20px; color:#333; font-size:13px; font-weight:bold;">${booking.client_name}</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Email</td>
+                <td style="padding:12px 20px; font-size:13px;"><a href="mailto:${booking.client_email}" style="color:#1e3a5f;">${booking.client_email}</a></td>
+              </tr>
+              ${booking.client_phone ? `<tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Phone</td>
+                <td style="padding:12px 20px; font-size:13px;"><a href="tel:${booking.client_phone}" style="color:#1e3a5f;">${booking.client_phone}</a></td>
+              </tr>` : ''}
+              <tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Amount Paid</td>
+                <td style="padding:12px 20px; color:#1e5f3a; font-size:16px; font-weight:bold;">${amount}</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Service</td>
+                <td style="padding:12px 20px; color:#333; font-size:13px;">${serviceLabel}</td>
+              </tr>
+              <tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Frequency</td>
+                <td style="padding:12px 20px; color:#333; font-size:13px;">${freqLabel}${isRecurring ? ` <span style="color:#2e7d32;">🔄</span>` : ''}</td>
+              </tr>
+              ${booking.preferred_date ? `<tr style="border-bottom:1px solid #ede9e3;">
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Date & Time</td>
+                <td style="padding:12px 20px; color:#333; font-size:13px;">${booking.preferred_date}${booking.preferred_time ? ` at ${booking.preferred_time}` : ''}</td>
+              </tr>` : ''}
+              ${booking.address ? `<tr>
+                <td style="padding:12px 20px; color:#888; font-size:13px;">Address</td>
+                <td style="padding:12px 20px; color:#333; font-size:13px;">${booking.address}</td>
+              </tr>` : ''}
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 32px 36px; text-align:center;">
+            <a href="https://pulumihawaii.base44.app/admin" style="display:inline-block; background:linear-gradient(135deg,#1e3a5f,#2d5282); color:#fff; text-decoration:none; padding:16px 40px; border-radius:50px; font-size:15px; letter-spacing:1px; font-family:Arial,sans-serif; font-weight:bold;">
+              View in Admin Panel →
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#1a1a1a; padding:20px 32px; text-align:center;">
+            <p style="margin:0; color:rgba(255,255,255,0.35); font-size:11px;">© Pulumi Hawaii, LLC</p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            to: 'pulumihawaii@gmail.com',
+            from_name: 'Pulumi Hawaii Payments',
+            subject: `💳 Payment Received: ${booking.client_name} — ${amount}${isRecurring ? ` [${freqLabel}]` : ''}`,
+            body: adminEmailBody,
           });
         }
       }

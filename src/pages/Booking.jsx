@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/lib/i18n';
 import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Check, Sparkles, Tag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Sparkles, Tag, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
@@ -32,6 +32,10 @@ const DISCOUNT_MAP = { one_time: 0, monthly: 10, biweekly: 15, weekly: 20 };
 export default function Booking() {
   const { t, lang } = useLanguage();
   const [step, setStep] = useState(0);
+
+  // Check for Stripe return
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentResult = urlParams.get('payment'); // 'success' or 'cancelled'
   const [selectedService, setSelectedService] = useState('');
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [frequency, setFrequency] = useState('one_time');
@@ -80,6 +84,76 @@ export default function Booking() {
     if (step === 3) return !!formData.client_name && !!formData.client_email && !!formData.address;
     return true;
   };
+
+  // Stripe payment success return
+  if (paymentResult === 'success') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="pt-32 pb-20 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center max-w-md px-6"
+          >
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="font-heading text-3xl font-light text-foreground mb-3">
+              {lang === 'ja' ? 'お支払い完了！' : 'Payment Confirmed! 🎉'}
+            </h2>
+            <p className="font-body text-sm text-muted-foreground mb-8">
+              {lang === 'ja'
+                ? 'お支払いを確認しました。確認メールをご確認ください。当日スタッフがお伺いします！'
+                : "Your payment was received and your booking is officially confirmed. Check your email for a confirmation — we'll see you soon!"}
+            </p>
+            <Link to="/">
+              <Button className="rounded-full font-body bg-primary hover:bg-primary/90">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t('nav.home')}
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Stripe payment cancelled return
+  if (paymentResult === 'cancelled') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="pt-32 pb-20 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center max-w-md px-6"
+          >
+            <div className="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-6">
+              <Tag className="w-10 h-10 text-amber-600" />
+            </div>
+            <h2 className="font-heading text-3xl font-light text-foreground mb-3">
+              {lang === 'ja' ? 'お支払いがキャンセルされました' : 'Payment Not Completed'}
+            </h2>
+            <p className="font-body text-sm text-muted-foreground mb-8">
+              {lang === 'ja'
+                ? 'お支払いはキャンセルされました。お見積もりメールのリンクからいつでもお支払いいただけます。'
+                : "No worries — your booking request is still saved. Use the payment link in your quote email to complete payment whenever you're ready."}
+            </p>
+            <Link to="/">
+              <Button variant="outline" className="rounded-full font-body">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t('nav.home')}
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
