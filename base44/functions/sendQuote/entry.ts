@@ -159,8 +159,8 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     const { booking_id, quote_amount: rawAmount } = await req.json();
@@ -211,14 +211,13 @@ Deno.serve(async (req) => {
       metadata: { booking_id: booking.id },
     });
 
-    // Update booking
+    // Update booking — keep status as 'pending' until Stripe confirms payment
     await base44.asServiceRole.entities.Booking.update(booking_id, {
       quote_amount,
       quote_amount_before_discount: originalAmount || quote_amount,
       payment_status: 'quote_sent',
       stripe_payment_link: session.url,
       stripe_session_id: session.id,
-      status: 'confirmed',
     });
 
     // Send email
