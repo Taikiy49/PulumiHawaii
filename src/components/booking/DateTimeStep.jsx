@@ -43,7 +43,16 @@ export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime,
   const isDateDisabled = (date) => {
     if (isBefore(date, today)) return true;
     const dateStr = format(date, 'yyyy-MM-dd');
-    return !availableDates.has(dateStr);
+    if (!availableDates.has(dateStr)) return true;
+    
+    // Disable date if all slots are booked
+    const availSlots = availability.find(a => a.date === dateStr)?.time_slots || [];
+    const bookedOnDate = new Set(
+      bookings
+        .filter(b => b.preferred_date === dateStr && b.status !== 'cancelled')
+        .map(b => b.preferred_time)
+    );
+    return availSlots.length > 0 && availSlots.every(slot => bookedOnDate.has(slot));
   };
 
   return (
@@ -94,6 +103,14 @@ export default function DateTimeStep({ selectedDate, onDateSelect, selectedTime,
               </button>
             ))}
           </div>
+        </div>
+      )}
+      
+      {selectedDate && availableSlots.length === 0 && rawSlots.length > 0 && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <p className="font-body text-sm text-amber-800">
+            All time slots are booked for {format(selectedDate, 'MMMM d, yyyy')}. Please select another date.
+          </p>
         </div>
       )}
     </div>
