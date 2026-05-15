@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, startOfWeek, endOfWeek } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, startOfWeek, endOfWeek, addWeeks, addMonths } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -35,9 +35,35 @@ export default function BookingCalendar() {
   const calEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
   const days = eachDayOfInterval({ start: calStart, end: calEnd });
 
+  // Expand recurring bookings into all their projected dates within visible range
+  const expandedBookings = useMemo(() => {
+    const result = [];
+    bookings.forEach(b => {
+      if (b.status === 'cancelled') return;
+      result.push({ ...b, _expanded_date: b.preferred_date });
+
+      if (!b.preferred_date || !b.recurring_frequency || b.recurring_frequency === 'one_time') return;
+
+      const baseDate = new Date(b.preferred_date + 'T12:00:00');
+      const limit = addMonths(new Date(), 6); // show up to 6 months ahead
+
+      let next;
+      for (let i = 1; i <= 52; i++) {
+        if (b.recurring_frequency === 'weekly') next = addWeeks(baseDate, i);
+        else if (b.recurring_frequency === 'biweekly') next = addWeeks(baseDate, i * 2);
+        else if (b.recurring_frequency === 'monthly') next = addMonths(baseDate, i);
+        else break;
+
+        if (next > limit) break;
+        result.push({ ...b, _expanded_date: format(next, 'yyyy-MM-dd'), _is_recurring: true });
+      }
+    });
+    return result;
+  }, [bookings]);
+
   const getBookingsForDay = (day) => {
     const dateStr = format(day, 'yyyy-MM-dd');
-    return bookings.filter(b => b.preferred_date === dateStr && b.status !== 'cancelled');
+    return expandedBookings.filter(b => b._expanded_date === dateStr);
   };
 
   const selectedDayBookings = selectedDay ? getBookingsForDay(selectedDay) : [];
@@ -165,6 +191,9 @@ export default function BookingCalendar() {
                     <p className="font-body text-xs text-muted-foreground">{b.client_email}</p>
                     {b.address && (
                       <p className="font-body text-xs text-muted-foreground">{b.address}</p>
+                    )}
+                    {b._is_recurring && (
+                      <p className="font-body text-[10px] text-primary/70 italic">↻ Recurring ({b.recurring_frequency?.replace('_', ' ')})</p>
                     )}
                     <div className={`inline-block mt-1 text-[10px] font-body px-2 py-0.5 rounded-full font-medium ${
                       b.status === 'confirmed' ? 'bg-green-100 text-green-800' :
