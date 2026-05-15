@@ -17,7 +17,17 @@ import RecurringPlans from '@/components/landing/RecurringPlans';
 export default function Home() {
   const location = useLocation();
 
+  // Update document title and meta tags
   useEffect(() => {
+    document.title = 'Pulumi Hawaii — Premium Cleaning & Property Care on Oʻahu | Honolulu';
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Trusted premium cleaning and property care services for Oʻahu. Regular cleaning, deep cleaning, inspections, and care services. Free estimates within 24 hours.');
+    }
+    
+    // Scroll to section if requested
     if (location.state?.scrollTo) {
       setTimeout(() => {
         const el = document.getElementById(location.state.scrollTo);
@@ -27,20 +37,40 @@ export default function Home() {
   }, [location.state]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background" role="main">
       <Navbar />
-      <Hero />
-      <TrustBar />
-      <Services />
-      <RecurringPlans />
-      <About />
-      <BeforeAfter />
-      <Testimonials />
-      <WhyChooseUs />
-      <FAQ />
-      <Contact />
+      <section id="hero">
+        <Hero />
+      </section>
+      <section id="trust">
+        <TrustBar />
+      </section>
+      <section id="services">
+        <Services />
+      </section>
+      <section id="plans">
+        <RecurringPlans />
+      </section>
+      <section id="about">
+        <About />
+      </section>
+      <section id="before-after">
+        <BeforeAfter />
+      </section>
+      <section id="testimonials">
+        <Testimonials />
+      </section>
+      <section id="why-choose">
+        <WhyChooseUs />
+      </section>
+      <section id="faq">
+        <FAQ />
+      </section>
+      <section id="contact">
+        <Contact />
+      </section>
       <Footer />
       <ChatWidget />
-    </div>
+    </main>
   );
 }

@@ -33,6 +33,19 @@ export default function Booking() {
   const { t, lang } = useLanguage();
   const [step, setStep] = useState(0);
 
+  // Update meta tags on page load
+  useEffect(() => {
+    document.title = lang === 'ja' ? 'ご予約 — Pulumi Hawaii' : 'Book Your Service — Pulumi Hawaii';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 
+        lang === 'ja' 
+          ? 'オアフ島での清掃サービスをご予約ください。定期清掃から深い清掃まで、今すぐ予約できます。'
+          : 'Book your cleaning service on Oahu. Choose from regular cleaning, deep cleaning, inspections, and more. Get a free quote in 24 hours.'
+      );
+    }
+  }, [lang]);
+
   // Check for Stripe return
   const urlParams = new URLSearchParams(window.location.search);
   const paymentResult = urlParams.get('payment'); // 'success' or 'cancelled'
