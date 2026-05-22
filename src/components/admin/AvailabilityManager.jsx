@@ -154,7 +154,7 @@ export default function AvailabilityManager() {
             <div>
               <p className="font-body text-sm font-semibold text-foreground">{avail.team_member}</p>
               <p className="font-body text-xs text-muted-foreground mt-1">
-                {avail.date && format(new Date(avail.date), 'EEEE, MMM d, yyyy')}
+                {avail.date && format(new Date(avail.date + 'T00:00:00'), 'EEEE, MMM d, yyyy')}
               </p>
               <div className="flex flex-wrap gap-1 mt-2">
                 {avail.time_slots?.map((slot, i) => (
