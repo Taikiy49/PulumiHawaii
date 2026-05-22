@@ -4,22 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const IMAGES = [
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/723e22ebe_generated_image.png',
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/841183dc3_ChatGPTImageMay22202610_08_21AM3.png',
     label: 'Kitchen',
     label_ja: 'キッチン',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/f70179117_generated_image.png',
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/e7be14026_ChatGPTImageMay22202610_08_21AM5.png',
     label: 'Living Room',
     label_ja: 'リビング',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/2fd884dc1_generated_image.png',
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/7e8454b25_ChatGPTImageMay22202610_08_21AM4.png',
     label: 'Bathroom',
     label_ja: 'バスルーム',
   },
   {
-    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/37f5e7705_generated_image.png',
+    src: 'https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/c3de0e004_ChatGPTImageMay22202610_08_21AM2.png',
     label: 'Bedroom',
     label_ja: 'ベッドルーム',
   },
