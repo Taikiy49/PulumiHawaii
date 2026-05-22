@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const serviceImages = [
-  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/7d906dde4_generated_ebcd3554.png",
-  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/ed62353c1_generated_32ad972a.png",
-  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/493c54bda_generated_1cc7e10d.png",
-  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/904def86f_generated_cd62b700.png",
+  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/e7be14026_ChatGPTImageMay22202610_08_21AM5.png", // Living Room – Regular Cleaning
+  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/841183dc3_ChatGPTImageMay22202610_08_21AM3.png", // Kitchen – Deep Cleaning
+  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/c3de0e004_ChatGPTImageMay22202610_08_21AM2.png", // Bedroom – Inspection
+  "https://media.base44.com/images/public/69f84d2fdf4aa6c0a11ac115/7e8454b25_ChatGPTImageMay22202610_08_21AM4.png", // Bathroom – Care Services
 ];
 
 const serviceIcons = [Sparkles, Droplets, ClipboardCheck, Heart];
