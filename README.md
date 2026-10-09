@@ -1,39 +1,54 @@
-**Welcome to your Base44 project** 
+<div align="center">
+  <h1>PulumiHawaii</h1>
+  <p><strong>React and Base44 cleaning-service application with booking flows, availability management, quotes, and payment integrations.</strong></p>
+  <p>
+    <img alt="React" src="https://img.shields.io/badge/React-303840?style=flat-square" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-303840?style=flat-square" />
+    <img alt="Base44" src="https://img.shields.io/badge/Base44-303840?style=flat-square" />
+    <img alt="Stripe" src="https://img.shields.io/badge/Stripe-303840?style=flat-square" />
+  </p>
+  <p><a href="#overview">Overview</a> · <a href="#getting-started">Getting started</a> · <a href="#repository-map">Repository map</a></p>
+</div>
 
-**About**
+---
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## Overview
 
-This project contains everything you need to run your app locally.
+A cleaning-service application for Pulumi Hawaii, with a customer-facing service and booking experience plus administrative availability and booking tools. Its backend schema and functions are managed through Base44.
 
-**Edit the code in your local development environment**
+## What’s inside
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+- Service selection, scheduling details, and recurring-booking steps.
+- Admin booking calendar, availability manager, and booking drawers.
+- Server functions for quotes, booking notifications, payment notifications, and Stripe webhooks.
 
-**Prerequisites:** 
+## Getting started
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+Install Node.js, then:
 
+```sh
+npm ci
 ```
+
+Create an untracked `.env.local` with your own Base44 app configuration:
+
+```dotenv
 VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
+VITE_BASE44_APP_BASE_URL=https://your-backend.example
 ```
 
-Run the app: `npm run dev`
+Run `npm run dev`. Validate with `npm run lint`, `npm run typecheck`, and `npm run build`. The backend functions additionally require their own server-side provider configuration; browser environment variables cannot hold private payment or model secrets.
 
-**Publish your changes**
+## Repository map
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+| Location | Purpose |
+| --- | --- |
+| [`src/components/booking/`](./src/components/booking/) | Customer booking steps |
+| [`src/components/admin/`](./src/components/admin/) | Availability and booking management |
+| [`src/components/landing/`](./src/components/landing/) | Customer-facing website sections |
+| [`base44/entities/`](./base44/entities/) | Backend data schemas |
+| [`base44/functions/`](./base44/functions/) | Notifications, quotes, chat, and payment webhooks |
 
-**Docs & Support**
+## Project status
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+Base44-backed application. A local frontend does not reproduce the hosted backend or payment services. Review backend environment settings and the Base44 publish workflow before deployment. No relationship to the Pulumi infrastructure-as-code product is implied.
